@@ -1,0 +1,21 @@
+.container {
+    width:100%;
+    display: grid;                           
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;      
+    grid-template-rows: 1fr 1fr 1fr;             
+    grid-gap: 0.5em;                         
+  }
+
+  .header-button{
+    height: 5em;
+  }
+
+  .blog-button {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+  }
+
+  .about-button {
+    grid-column: 5 / 6;
+    grid-row: 1 / 3;
+  }
