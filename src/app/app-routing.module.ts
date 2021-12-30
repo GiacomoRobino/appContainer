@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [];
+import { HourglassComponent } from './pages/apps/hourglass/hourglass.component';
+import { HomeComponent } from './pages/home/home.component';
+const routes: Routes = [
+  { path: 'apps/hourglass', component: HourglassComponent},
+  { path: '', component: HomeComponent}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
