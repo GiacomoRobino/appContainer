@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   }
 
   goToHourglass() {
-    this.router.navigate(['apps/hourglass']);
+    this.router.navigate(['apps/hourglass'], { queryParams: { appName: "hourglass" } });
   }
 
 }
