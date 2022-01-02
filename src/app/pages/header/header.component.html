@@ -1,4 +1,4 @@
 <div class="container">
-<button class="blog-button header-button element-container-style">blog</button>
+<button *ngIf="!home" class="blog-button header-button element-container-style" (click)="goHome()">home</button>
 <button class="about-button header-button element-container-style">about</button>
 </div>

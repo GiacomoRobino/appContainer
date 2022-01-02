@@ -1,7 +1,7 @@
-<app-header></app-header>
+<app-header [home]="true"></app-header>
 <div class="container">
-    <button class="app-button" (click)="goToHourglass()">Hourglass</button>
-    <button class="app-button">app2</button>
-    <button class="app-button">app3</button>
-    <button class="app-button">app4</button>
+    <button class="app-button" (click)="goToApp('hourglass')">Hourglass</button>
+    <button class="app-button" (click)="goToApp('gol')">Game of Life</button>
+    <button class="app-button" (click)="goToApp('jsonToGraph')">Json to graph</button>
+    <button class="app-button" (click)="goToApp('circularCalendar')">Ciruclar calendar</button>
 </div>

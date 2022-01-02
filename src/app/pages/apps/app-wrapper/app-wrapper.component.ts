@@ -17,7 +17,6 @@ export class AppWrapperComponent implements OnInit {
       .subscribe(params => {
         // Defaults to 0 if no query param provided.
         this.appName = params['appName'];
-        console.log(params);
       });
   }
 

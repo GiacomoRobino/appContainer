@@ -13,8 +13,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  goToHourglass() {
-    this.router.navigate(['apps/hourglass'], { queryParams: { appName: "hourglass" } });
+  goToApp(appName: string) {
+    this.router.navigate(['apps'], { queryParams: { appName: appName } });
   }
 
 }

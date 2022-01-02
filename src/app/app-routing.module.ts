@@ -5,7 +5,7 @@ import { AppWrapperComponent } from './pages/apps/app-wrapper/app-wrapper.compon
 import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
-  { path: 'apps/hourglass', component: AppWrapperComponent},
+  { path: 'apps', component: AppWrapperComponent},
   { path: '', component: HomeComponent}
 ];
 

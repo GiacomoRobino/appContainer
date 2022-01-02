@@ -7,6 +7,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { HeaderComponent } from './pages/header/header.component';
 import { HourglassComponent } from './pages/apps/hourglass/hourglass.component';
 import { AppWrapperComponent } from './pages/apps/app-wrapper/app-wrapper.component';
+import { GolComponent } from './pages/apps/gol/gol.component';
+import { JsonToGraphComponent } from './pages/apps/json-to-graph/json-to-graph.component';
+import { CircularCalendarComponent } from './pages/apps/circular-calendar/circular-calendar.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +17,10 @@ import { AppWrapperComponent } from './pages/apps/app-wrapper/app-wrapper.compon
     HomeComponent,
     HeaderComponent,
     HourglassComponent,
-    AppWrapperComponent
+    AppWrapperComponent,
+    GolComponent,
+    JsonToGraphComponent,
+    CircularCalendarComponent
   ],
   imports: [
     BrowserModule,
