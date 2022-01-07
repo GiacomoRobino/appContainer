@@ -6,8 +6,8 @@ import {Particle} from './model';
   styleUrls: ['./particle-network.component.scss']
 })
 export class ParticleNetworkComponent implements OnInit {
-	public h : number = window.innerHeight;
-	public w : number = window.innerWidth;
+	public h : number = 0;
+	public w : number = 0;
 	public loopId : number = 0;
 	public id : number = 0; 
 	public canvas : any;
@@ -16,18 +16,22 @@ export class ParticleNetworkComponent implements OnInit {
 	public options = {
 		particleColor: "rgba(255,255,255)",
 		lineColor: "rgba(0,181,255)",
-		particleAmount: 4,
+		particleAmount: 140,
 		defaultRadius: 2,
 		variantRadius: 2,
 		defaultSpeed: 1,
 		variantSpeed: 1,
-		linkRadius: 300
+		linkRadius: 100
 	};
 	
 	  constructor() { }
 	
 	  ngOnInit(): void {
-		this.canvas = document.getElementById("canvas");
+		this.canvas = <HTMLCanvasElement>document.querySelector('canvas');
+		this.canvas.width = window.innerWidth * 0.87;
+		this.canvas.height = window.innerHeight * 0.70;
+		this.w = this.canvas.width;
+		this.h = this.canvas.height;
 		this.ctx = this.canvas.getContext("2d");
 		this.initializeElements();
 		this.startAnimation();
