@@ -11,6 +11,7 @@ import { GolComponent } from './pages/apps/gol/gol.component';
 import { JsonToGraphComponent } from './pages/apps/json-to-graph/json-to-graph.component';
 import { CircularCalendarComponent } from './pages/apps/circular-calendar/circular-calendar.component';
 import { ParticleNetworkComponent } from './pages/apps/particle-network/particle-network.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ParticleNetworkComponent } from './pages/apps/particle-network/particle
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
