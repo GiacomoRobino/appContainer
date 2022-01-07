@@ -10,6 +10,7 @@ import { AppWrapperComponent } from './pages/apps/app-wrapper/app-wrapper.compon
 import { GolComponent } from './pages/apps/gol/gol.component';
 import { JsonToGraphComponent } from './pages/apps/json-to-graph/json-to-graph.component';
 import { CircularCalendarComponent } from './pages/apps/circular-calendar/circular-calendar.component';
+import { ParticleNetworkComponent } from './pages/apps/particle-network/particle-network.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CircularCalendarComponent } from './pages/apps/circular-calendar/circul
     AppWrapperComponent,
     GolComponent,
     JsonToGraphComponent,
-    CircularCalendarComponent
+    CircularCalendarComponent,
+    ParticleNetworkComponent
   ],
   imports: [
     BrowserModule,
