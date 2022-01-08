@@ -18,7 +18,7 @@ export class ParticleNetworkComponent implements OnInit {
   public options = {
     particleColor: 'rgba(255,255,255)',
     lineColor: 'rgba(0,181,255)',
-    particleAmount: 140,
+    particleAmount: 4,
     defaultRadius: 2,
     variantRadius: 2,
     defaultSpeed: 1,
@@ -43,32 +43,26 @@ export class ParticleNetworkComponent implements OnInit {
     this.startAnimation();
   }
 
+  reset() {
+	  this.particles.push(new Particle(this.w, this.h, this.options, this.ctx));
+  }
+
   initializeElements() {
     for (let i = 0; i < this.options.particleAmount; i++) {
       this.particles.push(new Particle(this.w, this.h, this.options, this.ctx));
     }
   }
 
-  startAnimation_() {
-    this.loopId = requestAnimationFrame(this.animationLoop.bind(this));
+  startAnimation() {
+    window.requestAnimationFrame(this.animationLoop.bind(this));
   }
 
   animationLoop() {
     this.ctx.clearRect(0, 0, this.w, this.h);
     this.drawScene();
-
-    this.id = requestAnimationFrame(this.animationLoop.bind(this));
+    requestAnimationFrame(this.animationLoop.bind(this));
   }
 
-  animation() {}
-
-  startAnimation() {
-    setTimeout(() => {
-      this.ctx.clearRect(0, 0, this.w, this.h);
-      this.drawScene();
-      this.startAnimation();
-    }, 1);
-  }
 
   drawScene() {
     this.drawLine();
