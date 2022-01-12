@@ -28,10 +28,21 @@ export class ParticleNetworkComponent implements OnInit {
     variantSpeed: 1,
     linkRadius: 100,
   };
+
+  public staticParticleOptions = {    
+  particleColor: 'rgba(255,255,255)',
+  lineColor: 'rgba(0,181,255)',
+  particleAmount: 4,
+  defaultRadius: 0.5,
+  variantRadius: 0.5,
+  defaultSpeed: 0,
+  variantSpeed: 0,
+  linkRadius: 100,
+};
   value: number = 100;
   sliderOptions: Options = {
-    floor: 20,
-    ceil: 150,
+    floor: 4,
+    ceil: 1500,
   };
   constructor() {}
 
@@ -41,6 +52,8 @@ export class ParticleNetworkComponent implements OnInit {
     this.canvas.height = window.innerHeight * 0.7;
     this.w = this.canvas.width;
     this.h = this.canvas.height;
+    window.addEventListener("click", (event) => {
+      this.particles.push(new Particle(event.offsetX, event.offsetY, this.staticParticleOptions, this.ctx, false));})
     this.ctx = this.canvas.getContext('2d');
     this.initializeElements();
     this.startAnimation();
@@ -53,10 +66,14 @@ export class ParticleNetworkComponent implements OnInit {
   }
 
   initializeElements() {
+    this.particles = this.particles.filter(x=>!x.value);
     for (let i = 0; i < this.options.particleAmount; i++) {
       this.particles.push(new Particle(this.w, this.h, this.options, this.ctx));
+      //this.particles.push(new Particle(this.w, this.h, this.staticParticleOptions, this.ctx));
     }
+
   }
+
 
   startAnimation() {
     window.requestAnimationFrame(this.animationLoop.bind(this));
@@ -68,9 +85,6 @@ export class ParticleNetworkComponent implements OnInit {
 
   animationLoop() {
     this.renderedFrames ++;
-    if (this.renderedFrames % 100 === 0) {
-      console.log(this.renderedFrames / 100);
-    }
     this.ctx.clearRect(0, 0, this.w, this.h);
     this.drawScene();
     requestAnimationFrame(this.animationLoop.bind(this));
@@ -100,15 +114,15 @@ export class ParticleNetworkComponent implements OnInit {
   }
 
   
-  linkPoints(point: any, hubs: any[]) {
+  linkPoints(point: any, hubs: Particle[]) {
     point.radius = 0.5;
     let particleNeighborsNumber = point.radius;
     for (var i = 0; i < hubs.length; i++) {
       var distance = this.checkDistance(point.x, point.y, hubs[i].x, hubs[i].y);
       var opacity = 1 - distance / this.options.linkRadius;
       if (opacity > 0) {
-        particleNeighborsNumber += 0.3;
-        if (this.netActivated){
+        //particleNeighborsNumber += 0.3;
+        if (this.netActivated && point.valid && !(hubs[i].valid)){
         this.ctx.lineWidth = 0.5;
         this.ctx.strokeStyle = 'rgba(100,100,200,' + opacity + ')';
         this.ctx.beginPath();
@@ -129,8 +143,8 @@ export class ParticleNetworkComponent implements OnInit {
     for (var i = 0; i < hubs.length; i++) {
       var distance = this.checkDistance(point.x, point.y, hubs[i].x, hubs[i].y);
       var opacity = 1 - distance / this.options.linkRadius;
-      if (opacity > 0) {
-        particleNeighborsNumber += 0.3;
+      if ((opacity > 0 ) && hubs[i].valid) {
+        //particleNeighborsNumber += 0.3;
         if (this.netActivated){
         this.ctx.lineWidth = 0.5;
         this.ctx.strokeStyle = 'rgb(100,100,200)';

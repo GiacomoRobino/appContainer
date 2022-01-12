@@ -1,11 +1,11 @@
 .element-container-style {
   background-color: darkgray;
   color: white;
-  padding: 2em;
+  padding: 0em;
   border-radius: 0.5em;
-  bordere: 1px solid black;
+  border: 1px solid black;
 }
 
 .app-filler{
-  height: 100%;
+  display:table-cell;
 }

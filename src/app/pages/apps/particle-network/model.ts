@@ -1,4 +1,5 @@
 export class Particle {
+  public valid: boolean;
   public h: number;
   public w: number;
   public x: number;
@@ -10,12 +11,13 @@ export class Particle {
   public vector: { x: number; y: number };
   public ctx: any;
 
-  constructor(w: number, h: number, options: any, ctx: any) {
+  constructor(w: number, h: number, options: any, ctx: any, random: boolean = true) {
+    this.valid = random;
     this.ctx = ctx;
     this.h = h;
     this.w = w;
-    this.x = Math.random() * w;
-    this.y = Math.random() * h;
+    this.x = random ? Math.random() * w : w;
+    this.y = random ? Math.random() * h : h;
     this.color = options.particleColor;
     this.radius = options.defaultRadius + Math.random() * options.variantRadius;
     this.speed = options.defaultSpeed + Math.random() * options.variantSpeed;

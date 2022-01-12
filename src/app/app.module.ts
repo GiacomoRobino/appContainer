@@ -12,6 +12,7 @@ import { JsonToGraphComponent } from './pages/apps/json-to-graph/json-to-graph.c
 import { CircularCalendarComponent } from './pages/apps/circular-calendar/circular-calendar.component';
 import { ParticleNetworkComponent } from './pages/apps/particle-network/particle-network.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { MarkupEditorComponent } from './pages/apps/markup-editor/markup-editor.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     GolComponent,
     JsonToGraphComponent,
     CircularCalendarComponent,
-    ParticleNetworkComponent
+    ParticleNetworkComponent,
+    MarkupEditorComponent
   ],
   imports: [
     BrowserModule,
