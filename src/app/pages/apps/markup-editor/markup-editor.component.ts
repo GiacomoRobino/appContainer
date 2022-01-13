@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { HtmlHandler } from './MarkdownParser';
 @Component({
   selector: 'app-markup-editor',
   templateUrl: './markup-editor.component.html',
@@ -7,9 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MarkupEditorComponent implements OnInit {
 
-  constructor() { }
-
+  constructor() { 
+  }
   ngOnInit(): void {
+    new HtmlHandler().TextChangedHandler("markdown", "markdown-output");
   }
 
 }
