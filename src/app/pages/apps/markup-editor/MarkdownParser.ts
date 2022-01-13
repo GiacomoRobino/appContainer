@@ -35,11 +35,11 @@ export enum TagType {
 export class TagTypeToHtml{
     private readonly tagTypeToHtml: Map<TagType, string> = new Map<TagType, string>();
     constructor(){
-        this.tagTypeToHtml.set(TagType.Paragraph, "<p>");
-        this.tagTypeToHtml.set(TagType.Header1, "<h1>");
-        this.tagTypeToHtml.set(TagType.Header2, "<h2>");
-        this.tagTypeToHtml.set(TagType.Header3, "<h3>");
-        this.tagTypeToHtml.set(TagType.HorizontalRule, "<hr>");
+        this.tagTypeToHtml.set(TagType.Paragraph, "p");
+        this.tagTypeToHtml.set(TagType.Header1, "h1");
+        this.tagTypeToHtml.set(TagType.Header2, "h2");
+        this.tagTypeToHtml.set(TagType.Header3, "h3");
+        this.tagTypeToHtml.set(TagType.HorizontalRule, "hr");
     }
 
     private getTag(tagType: TagType, openingTagPattern: string) : string{
@@ -193,7 +193,7 @@ class LineParser{
         }
         let split = value.startsWith(tag);
         if(split){
-            output = [true, value.substr(tag.length)]
+            output = [true, value.substring(tag.length)]
         }
         return output;
     }
@@ -207,19 +207,19 @@ class Header1ChainHandler extends ParseChainHandler{
 
 class Header2ChainHandler extends ParseChainHandler{
     constructor(document: IMarkdownDocument){
-        super(document, "##", new Header1Visitor())
+        super(document, "##", new Header2Visitor())
     }
 }
 
 class Header3ChainHandler extends ParseChainHandler{
     constructor(document: IMarkdownDocument){
-        super(document, "###", new Header1Visitor())
+        super(document, "###", new Header3Visitor())
     }
 }
 
 class HorizontalRuleHandler extends ParseChainHandler{
     constructor(document: IMarkdownDocument){
-        super(document, "---", new Header1Visitor())
+        super(document, "---", new HorizontalRuleVisitor())
     }
 }
 
@@ -231,24 +231,24 @@ class ChainOfResponsabilityFactory{
         let horizontalRule: HorizontalRuleHandler = new HorizontalRuleHandler(document);
         let paragraph: ParagraphChainHandler = new ParagraphChainHandler(document);
 
-        header1.SetNext(header2);
-        header2.SetNext(header3);
-        header3.SetNext(horizontalRule);
+        header3.SetNext(header2);
+        header2.SetNext(header1);
+        header1.SetNext(horizontalRule);
         horizontalRule.SetNext(paragraph);
         
-        return header1; 
+        return header3; 
     }
 }
 
 class MarkDown{
     public ToHtml(text: string) : string {
         let document: IMarkdownDocument = new MarkdownDocument()
-        let header1 : Header1ChainHandler = new ChainOfResponsabilityFactory().Build(document);
+        let header3 : Header1ChainHandler = new ChainOfResponsabilityFactory().Build(document);
         let lines : string[] = text.split("\n");
         for(let line of lines){
             let parseElement : ParseElement = new ParseElement();
             parseElement.CurrentLine = line;
-            header1.HandleRequest(parseElement);
+            header3.HandleRequest(parseElement);
         }
         return document.Get();
     }
