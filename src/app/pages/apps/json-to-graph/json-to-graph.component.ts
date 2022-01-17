@@ -16,39 +16,52 @@ export class JsonToGraphComponent implements OnInit {
   public node: any;
   public link: any;
   public svg : any;
+
+  public globalGraph : {nodes: SimulationNodeDatum[], links: SimulationLinkDatum<Node>[]} = {nodes: [], links: []};
+
   public elem = this.viewContainerRef.element.nativeElement;
-  public graph : {nodes: SimulationNodeDatum[], links: SimulationLinkDatum<SimulationNodeDatum>[]} = {
+  public bob = new Node();
+  public chen = new Node();
+  public alice = new Node();
+  public dawg = new Node();
+  public graph : {nodes: SimulationNodeDatum[], links: SimulationLinkDatum<Node>[]} = {
     nodes: [
-      new Node("Alice"),
-      new Node("Bob" ),
-      new Node("Chen"),
-      new Node("Dawg")
+      this.alice,this.bob, this.chen, this.dawg
     ],
+    /*
     links: [
-      { source: "Alice", target: "Bob" },
-      { source: "Chen", target: "Bob" }
+      { source:  this.alice, target: this.bob},
+      { source: this.chen, target: this.bob},
+      { source: this.chen, target: this.dawg}
+    ]
+    */
+    links: [
+      { source: this.dawg, target: this.bob},
+      { source: this.dawg, target: this.alice},
+      { source:  this.dawg, target: this.chen}
     ]
   };
 
 
   ngOnInit(): void {
-      this.svg = this.localSelector("#svgID");
+      this.svg = this.localSelector("svg");
       let width = this.svg.attr("width");
       let height = this.svg.attr("height");
-      this.simulation = forceSimulation(this.graph.nodes)
-      let x = this.ticked.bind(this);
+      this.simulation = forceSimulation(this.graph.nodes);
+
+      this.objectToGraph({name : "test", age : "12", friends : ["bob", "alice", "dawg"]});
+
     this.simulation.force(
       "link",
       forceLink()
         .id(function(d:any) {
-          return d.name;
+          return d.socialSecurityNumber;
         })
         .links(this.graph.links)
     )
-
-    .force("charge", forceManyBody().strength(-0))
+    .force("charge", forceManyBody().strength(-10))
     .force("center", forceCenter(width / 2, height / 2))
-    .on("tick", x);
+    .on("tick", this.ticked.bind(this));
 
     this.link = this.svg
     .append("g")
@@ -57,7 +70,9 @@ export class JsonToGraphComponent implements OnInit {
     .data(this.graph.links)
     .enter()
     .append("line")
-    .attr("stroke-width", 3).attr("color", "blue");
+    .style("stroke", "lightgreen")
+    .attr("stroke-width", function(d:any) {
+      return 3;});
 
     this.node = this.svg
     .append("g")
@@ -68,14 +83,16 @@ export class JsonToGraphComponent implements OnInit {
     .append("circle")
     .attr("r", 5)
     .attr("fill", function(d: any) {
-      return "red";
+      return "blue";
     })
     .call(
       drag()
         .on("start", this.dragstarted.bind(this))
-        .on("drag", this.dragged)
+        .on("drag", this.dragged.bind(this))
         .on("end", this.dragended.bind(this))
     );
+
+    
     }
 
    ticked() {
@@ -103,7 +120,6 @@ export class JsonToGraphComponent implements OnInit {
   }
 
   dragstarted(d : any) {
-    console.log(d);
     if (!d.active) this.simulation.alphaTarget(0.3).restart();
     d.subject.fx = d.x;
     d.subject.fy = d.y;
@@ -129,5 +145,43 @@ export class JsonToGraphComponent implements OnInit {
     divs.enter().append("div").merge(divs).text((d : string)=> d);
     divs.exit().remove();
   }
+
+  objectToGraph(obj : any) {
+    let objectKeys = Object.keys(obj);
+    //base case, there are no more sons that are arrays or objects
+    if(!(objectKeys.some((x : string) => this.isBasic(obj[x])))) {
+    }
+
+    else{
+    let newNode = new Node();
+    //recursive case, there are sons that are arrays or objects
+
+    //add the basic type objects to the node
+    let basicKeys = objectKeys.filter((x : string) => this.isBasic(obj[x]));
+    newNode.body =  {...basicKeys.map((x : string) => ({key : x, value : obj[x]}))};
+
+    console.log(newNode);
+    
+    //create the node data
+    
+    //create a node for each son
+
+    //create links between the node and the sons
+    }
+  }
+
+  isBasic(obj: any){
+    return !(this.isObject(obj) || this.isArray(obj));
+  }
+
+  isObject(obj: any){
+    return (typeof obj === 'object' &&
+    obj !== null);
+  }
+
+  isArray(obj: any){
+    return Array.isArray(obj)
+  }
+ 
 
 }
