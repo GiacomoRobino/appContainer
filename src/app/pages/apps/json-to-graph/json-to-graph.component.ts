@@ -49,7 +49,7 @@ export class JsonToGraphComponent implements OnInit {
       let height = this.svg.attr("height");
       this.simulation = forceSimulation(this.graph.nodes);
 
-      this.objectToGraph({name : "test", age : "12", friends : ["bob", "alice", "dawg"]});
+      this.objectToGraph({name : "test", age : "12"});
 
     this.simulation.force(
       "link",
@@ -147,9 +147,26 @@ export class JsonToGraphComponent implements OnInit {
   }
 
   objectToGraph(obj : any) {
-    let objectKeys = Object.keys(obj);
+    this.initNodes(obj);
+    
+    //this.globalGraph.links.push({source: newNode, target: this.globalGraph.nodes[0]});
+    
+    //create the node data
+    
+    //create a node for each son
+
+    //create links between the node and the sons
+    
+  }
+
+  isBasic(obj: any){
+    return !(this.isObject(obj) || this.isArray(obj));
+  }
+
+  initNodes(obj : any) {
+    let objectEntries = Object.entries(obj);
     //base case, there are no more sons that are arrays or objects
-    if(!(objectKeys.some((x : string) => this.isBasic(obj[x])))) {
+    if(!(objectEntries.some(([key, value]) => this.isBasic(value)))) {
     }
 
     else{
@@ -157,22 +174,21 @@ export class JsonToGraphComponent implements OnInit {
     //recursive case, there are sons that are arrays or objects
 
     //add the basic type objects to the node
-    let basicKeys = objectKeys.filter((x : string) => this.isBasic(obj[x]));
-    newNode.body =  {...basicKeys.map((x : string) => ({key : x, value : obj[x]}))};
+    let basicKeys = objectEntries.filter(([key, value]) => this.isBasic(value));
+    newNode.body =  {...basicKeys.map(([k, v])  => ({key : k, value : v}))};
 
-    console.log(newNode);
-    
-    //create the node data
-    
-    //create a node for each son
-
-    //create links between the node and the sons
-    }
+    let newNodeEntries = Object.entries(newNode.body)
+    let newNodeSons = newNodeEntries.map(value => new Node(value));
+    this.globalGraph.nodes = [...this.globalGraph.nodes, ...newNodeSons, newNode];
+    this.initLinks(newNode, newNodeSons);
   }
-
-  isBasic(obj: any){
-    return !(this.isObject(obj) || this.isArray(obj));
-  }
+ }
+ initLinks(parent: any, sons: any) {
+   sons.forEach((son: any) => {
+     this.globalGraph.links.push({source: parent, target: son});
+   });
+   console.log(this.globalGraph);
+ }
 
   isObject(obj: any){
     return (typeof obj === 'object' &&
