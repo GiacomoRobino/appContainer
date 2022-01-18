@@ -55,7 +55,6 @@ export class JsonToGraphComponent implements OnInit {
       .links(this.globalGraph.links)
       )
       .force('charge', forceManyBody().strength(-550))
-      .force('center', forceCenter(width / 2, height / 2))
       .on('tick', this.ticked.bind(this));
       
       this.link = this.svg
@@ -72,10 +71,14 @@ export class JsonToGraphComponent implements OnInit {
       
       this.textsAndNodes = this.svg.append('g').selectAll("g").data(this.globalGraph.nodes).enter().append("g");
 
-      let circles = this.textsAndNodes.append("circle").attr('r', 5)
+      let circles = this.textsAndNodes.append("rect")
+      .attr("width",(d: any) => 10)
+      .attr("height",(d: any) => 10)
       .attr('fill', function (d: any) {
         return 'blue';
       })
+      .attr("rx",(d:any)=>d.body.length === 2? 10 :0)
+      .attr("ry",(d:any)=>d.body.length === 2? 10 :0)
 
       let texts = this.textsAndNodes.append("text").text((d: any) => this.isArray(d.body)? d.body[1].key + ':' + d.body[1].value : "<subject>" );
 
