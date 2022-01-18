@@ -47,7 +47,7 @@ export class JsonToGraphComponent implements OnInit {
       this.svg = this.localSelector("svg");
       let width = this.svg.attr("width");
       let height = this.svg.attr("height");
-      this.simulation = forceSimulation(this.graph.nodes);
+      this.simulation = forceSimulation(this.globalGraph.nodes);
 
       this.objectToGraph({name : "test", age : "12"});
 
@@ -55,11 +55,11 @@ export class JsonToGraphComponent implements OnInit {
       "link",
       forceLink()
         .id(function(d:any) {
-          return d.socialSecurityNumber;
+          return d;
         })
-        .links(this.graph.links)
+        .links(this.globalGraph.links)
     )
-    .force("charge", forceManyBody().strength(-10))
+    .force("charge", forceManyBody().strength(-0))
     .force("center", forceCenter(width / 2, height / 2))
     .on("tick", this.ticked.bind(this));
 
@@ -67,7 +67,7 @@ export class JsonToGraphComponent implements OnInit {
     .append("g")
     .attr("class", "links")
     .selectAll("line")
-    .data(this.graph.links)
+    .data(this.globalGraph.links)
     .enter()
     .append("line")
     .style("stroke", "lightgreen")
@@ -78,7 +78,7 @@ export class JsonToGraphComponent implements OnInit {
     .append("g")
     .attr("class", "nodes")
     .selectAll("circle")
-    .data(this.graph.nodes)
+    .data(this.globalGraph.nodes)
     .enter()
     .append("circle")
     .attr("r", 5)
