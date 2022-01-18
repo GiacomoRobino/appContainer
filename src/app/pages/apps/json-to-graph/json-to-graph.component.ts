@@ -1,3 +1,4 @@
+import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/template';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import {
   select,
@@ -30,52 +31,34 @@ export class JsonToGraphComponent implements OnInit {
   } = { nodes: [], links: [] };
 
   public elem = this.viewContainerRef.element.nativeElement;
-  public bob = new Node();
-  public chen = new Node();
-  public alice = new Node();
-  public dawg = new Node();
-  public globalGraph_: {
-    nodes: SimulationNodeDatum[];
-    links: SimulationLinkDatum<Node>[];
-  } = {
-    nodes: [this.alice, this.bob, this.chen, this.dawg],
-    /*
-    links: [
-      { source:  this.alice, target: this.bob},
-      { source: this.chen, target: this.bob},
-      { source: this.chen, target: this.dawg}
-    ]
-    */
-    links: [
-      { source: this.dawg, target: this.bob },
-      { source: this.dawg, target: this.alice },
-      { source: this.dawg, target: this.chen },
-    ],
-  };
+
+  public textsAndNodes: any ;
+ 
 
   ngOnInit(): void {
     this.svg = this.localSelector('svg');
     let width = this.svg.attr('width');
     let height = this.svg.attr('height');
-    this.globalGraph = this.graphFromObject({ name: 'test', age: '12', height: 'tall', 
-    sub: { name: 'test', age: '12', height: 'tall', sub: { name: 'test', age: '12'} }});
-    console.log(this.globalGraph);
-
+    this.globalGraph = this.graphFromObject({ name: 'grandfather', age: '100', height: 'tall', 
+    sub: { name: 'father', age: '10', height: 'tall', sub: { name: 'son', age: '1'} }});
+    
+    
+    
     this.simulation = forceSimulation(this.globalGraph.nodes);
     this.simulation
-      .force(
-        'link',
-        forceLink()
-          .id(function (d: any) {
-            return d;
-          })
-          .links(this.globalGraph.links)
+    .force(
+      'link',
+      forceLink()
+      .id(function (d: any) {
+        return d;
+      })
+      .links(this.globalGraph.links)
       )
-      .force('charge', forceManyBody().strength(-10))
+      .force('charge', forceManyBody().strength(-550))
       .force('center', forceCenter(width / 2, height / 2))
       .on('tick', this.ticked.bind(this));
-
-    this.link = this.svg
+      
+      this.link = this.svg
       .append('g')
       .attr('class', 'links')
       .selectAll('line')
@@ -86,27 +69,30 @@ export class JsonToGraphComponent implements OnInit {
       .attr('stroke-width', function (d: any) {
         return 3;
       });
+      
+      this.textsAndNodes = this.svg.append('g').selectAll("g").data(this.globalGraph.nodes).enter().append("g");
 
-    this.node = this.svg
-      .append('g')
-      .attr('class', 'nodes')
-      .selectAll('circle')
-      .data(this.globalGraph.nodes)
-      .enter()
-      .append('circle')
-      .attr('r', 5)
+      let circles = this.textsAndNodes.append("circle").attr('r', 5)
       .attr('fill', function (d: any) {
         return 'blue';
       })
+
+      let texts = this.textsAndNodes.append("text").text((d: any) => this.isArray(d.body)? d.body[1].key + ':' + d.body[1].value : "<subject>" );
+
+      console.log(this.globalGraph.nodes);
+      
+      this.textsAndNodes
       .call(
         drag()
           .on('start', this.dragstarted.bind(this))
           .on('drag', this.dragged.bind(this))
           .on('end', this.dragended.bind(this))
       );
+      
   }
 
   ticked() {
+    this.textsAndNodes.attr('transform', (d: any) => {return "translate(" + d.x + "," + d.y + ")"});
     this.link
       .attr('x1', function (d: any) {
         return d.source.x;
@@ -121,13 +107,7 @@ export class JsonToGraphComponent implements OnInit {
         return d.target.y;
       });
 
-    this.node
-      .attr('cx', function (d: any) {
-        return d.x;
-      })
-      .attr('cy', function (d: any) {
-        return d.y;
-      });
+
   }
 
   dragstarted(d: any) {
