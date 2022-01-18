@@ -24,7 +24,7 @@ export class JsonToGraphComponent implements OnInit {
   public chen = new Node();
   public alice = new Node();
   public dawg = new Node();
-  public graph : {nodes: SimulationNodeDatum[], links: SimulationLinkDatum<Node>[]} = {
+  public globalGraph_ : {nodes: SimulationNodeDatum[], links: SimulationLinkDatum<Node>[]} = {
     nodes: [
       this.alice,this.bob, this.chen, this.dawg
     ],
@@ -47,10 +47,9 @@ export class JsonToGraphComponent implements OnInit {
       this.svg = this.localSelector("svg");
       let width = this.svg.attr("width");
       let height = this.svg.attr("height");
+      this.objectToGraph({name : "test", age : "12", height: "tall"});
+
       this.simulation = forceSimulation(this.globalGraph.nodes);
-
-      this.objectToGraph({name : "test", age : "12"});
-
     this.simulation.force(
       "link",
       forceLink()
@@ -59,7 +58,7 @@ export class JsonToGraphComponent implements OnInit {
         })
         .links(this.globalGraph.links)
     )
-    .force("charge", forceManyBody().strength(-0))
+    .force("charge", forceManyBody().strength(-10))
     .force("center", forceCenter(width / 2, height / 2))
     .on("tick", this.ticked.bind(this));
 
@@ -183,6 +182,7 @@ export class JsonToGraphComponent implements OnInit {
     this.initLinks(newNode, newNodeSons);
   }
  }
+
  initLinks(parent: any, sons: any) {
    sons.forEach((son: any) => {
      this.globalGraph.links.push({source: parent, target: son});
