@@ -2,7 +2,7 @@ import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/temp
 import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { setClassMetadata } from '@angular/core/src/r3_symbols';
-import { select, timeout } from 'd3';
+import { easeCubicIn, select, timeout } from 'd3';
 
 @Component({
   selector: 'app-json-to-graph',
@@ -29,11 +29,12 @@ export class JsonToGraphComponent implements OnInit {
   public width: any;
   public innerWidth: number = 0;
   public circles: any;
-  public sideLength: number = 20;
   public squareSide: number = 0;
   public data: any;
   public frameCount = 0;
-  public ageLimit = 40;
+
+  public sideLength: number = 20;
+  public ageLimit = 3;
 
   ngOnInit(): void {
     this.svg = select('.fill-app');
@@ -63,7 +64,7 @@ export class JsonToGraphComponent implements OnInit {
 
   animationLoop() {
     this.frameCount += 1;
-    if(this.frameCount%6000 === 0){
+    if(this.frameCount%1000 === 0){
     this.render();
     }
     requestAnimationFrame(this.animationLoop.bind(this));
@@ -71,8 +72,8 @@ export class JsonToGraphComponent implements OnInit {
 
 
   randomColorStartingCell(cell: any) {
-    if (Math.random() > 0.9995 && !cell.isOn) {
-      return { ...cell, isOn: true, nextColor: 'green', age: this.randomNumber(1, this.ageLimit, true)};
+    if (Math.random() > 0.9998 && !cell.isOn) {
+      return { ...cell, isOn: true, nextColor: "green", age: this.randomNumber(1, this.ageLimit, true)};
     } else {
       return { ...cell};
     }
@@ -104,7 +105,7 @@ export class JsonToGraphComponent implements OnInit {
   }
 
   colorDown(cell: any) {
-    cell.color = 'green';
+    cell.color = "green";
   }
   render() {
     let transitionTime = 100;
@@ -121,14 +122,15 @@ export class JsonToGraphComponent implements OnInit {
       .attr('width', (d: any) => this.squareSide)
     rectangles
       .transition()
-      .duration((d :any) => 10 * (d.age + 2))
-      .attr('fill', (d: any) => d.color);
-/*
+      .duration((d :any) => 100 - (d.age ))
+      .ease(easeCubicIn)
+      .attr('fill', (d: any) => d.color)
+
     en.append('text').merge(groups.select('text')).text((d: any) => d.age > 0 ? d.age : '')
         .attr('fill', 'white')
         .attr('x', '5px')
         .attr('y', '15px');
-*/
+
 
     this.lookUpCell(this.matrixUp);
     this.mapEachCell(this.generateSuccessors);
@@ -224,8 +226,8 @@ export class JsonToGraphComponent implements OnInit {
   
   matrixUp(cellUp: any, cell: any) {
     if (cellUp.isOn) {
-      cell.nextColor = 'green';
-      cell.age = cellUp.age + 1;
+      cell.nextColor = "green";
+      cell.age = cellUp.age + 3;
     }
   }
 
