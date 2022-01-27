@@ -29,7 +29,7 @@ export class JsonToGraphComponent implements OnInit {
   public width: any;
   public innerWidth: number = 0;
   public circles: any;
-  public sideLength: number = 100;
+  public sideLength: number = 20;
   public squareSide: number = 0;
   public data: any;
 
@@ -55,7 +55,7 @@ export class JsonToGraphComponent implements OnInit {
 
     this.data = this.data.map((d : any) => {
       if(d.isOn) {
-      return {...d, color: "green"}}
+      return {...d, color: "green", nextColor: "green"}}
       else {
         return {...d}
       }
@@ -99,7 +99,7 @@ export class JsonToGraphComponent implements OnInit {
       d.nextColor === 'green' ? { ...d, color: d.nextColor, isOn: true} : {...d, color: 'grey'}
       )
       );
-    timeout(() => this.render(), 400);
+    timeout(() => this.render(), 300);
   }
 
   setData(record: any, side: number) {
