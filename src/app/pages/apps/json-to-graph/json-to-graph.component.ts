@@ -114,19 +114,21 @@ export class JsonToGraphComponent implements OnInit {
       .enter()
       .append('g')
       .attr('transform', (d: any, i: number) => this.getTranslateString(i));
-    en.append('rect')
+    let rectangles = en.append('rect')
       .merge(groups.select('rect'))
       .attr('shape-rendering', 'crispEdges')
       .attr('height', (d: any) => this.squareSide)
       .attr('width', (d: any) => this.squareSide)
+    rectangles
       .transition()
-      .duration(100)
+      .duration((d :any) => 10 * (d.age + 2))
       .attr('fill', (d: any) => d.color);
-
+/*
     en.append('text').merge(groups.select('text')).text((d: any) => d.age > 0 ? d.age : '')
         .attr('fill', 'white')
         .attr('x', '5px')
         .attr('y', '15px');
+*/
 
     this.lookUpCell(this.matrixUp);
     this.mapEachCell(this.generateSuccessors);
