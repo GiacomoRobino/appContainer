@@ -1,17 +1,8 @@
 import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/template';
+import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
-import {
-  select,
-  selectAll,
-  forceSimulation,
-  SimulationNodeDatum,
-  SimulationLinkDatum,
-  forceLink,
-  forceManyBody,
-  forceCenter,
-  drag,
-} from 'd3';
-import { Node } from './node';
+import { setClassMetadata } from '@angular/core/src/r3_symbols';
+import { select, timeout } from 'd3';
 
 @Component({
   selector: 'app-json-to-graph',
@@ -24,238 +15,153 @@ export class JsonToGraphComponent implements OnInit {
   public node: any;
   public link: any;
   public svg: any;
-
-  public globalGraph: {
-    nodes: SimulationNodeDatum[];
-    links: SimulationLinkDatum<Node>[];
-  } = { nodes: [], links: [] };
+  public xScale: any;
+  public yScale: any;
+  public verticalSpacing = 20;
+  public xValue: any = (d: any) => d.price;
+  public yValue: any = (d: any) => d.name;
 
   public elem = this.viewContainerRef.element.nativeElement;
 
-  public textsAndNodes: any ;
- 
+  public margin: { top: number; right: number; bottom: number; left: number } =
+    { top: 20, right: 20, bottom: 20, left: 20 };
+  public textsAndNodes: any;
+  public width: any;
+  public innerWidth: number = 0;
+  public circles: any;
+  public sideLength: number = 4;
+  public squareSide: number = 0;
+  public data: any;
 
   ngOnInit(): void {
-    this.svg = this.localSelector('svg');
-    let width = this.svg.attr('width');
-    let height = this.svg.attr('height');
-    this.globalGraph = this.graphFromObject({ name: 'grandfather', age: '100', height: 'tall', 
-    sub: { name: 'father', age: '10', height: 'tall', sub: { name: 'son', age: '1'} }});
-    
-    
-    
-    this.simulation = forceSimulation(this.globalGraph.nodes);
-    this.simulation
-    .force(
-      'link',
-      forceLink()
-      .id(function (d: any) {
-        return d;
-      })
-      .links(this.globalGraph.links)
-      )
-      .force('charge', forceManyBody().strength(-550))
-      .on('tick', this.ticked.bind(this));
-      
-      this.link = this.svg
+    this.svg = select('.fill-app');
+    //TODO: ottenere altezza svg
+    this.squareSide = 500 / this.sideLength; //parseInt(h) / this.sideLength;
+    this.data = this.setData(
+      { text: 'a', color: 'red', letter: 'a', up: -1, down: -1 },
+      this.sideLength
+    );
+    this.linkSquares();
+    this.mapUpCell(this.colorUp);
+    //this.mapUpCell(this.colorDown);
+
+    this.render();
+  }
+
+  colorUp(cell: any) {
+    cell.color = 'yellow';
+  }
+
+  colorDown(cell: any) {
+    cell.color = 'green';
+  }
+  render() {
+    let groups = this.svg.selectAll('g');
+    let g = groups.data(this.data);
+    let en = g
+      .enter()
       .append('g')
-      .attr('class', 'links')
-      .selectAll('line')
-      .data(this.globalGraph.links)
-      .enter()
-      .append('line')
-      .style('stroke', 'lightgreen')
-      .attr('stroke-width', function (d: any) {
-        return 3;
-      });
-      
-      this.textsAndNodes = this.svg.append('g').selectAll("g").data(this.globalGraph.nodes).enter().append("g");
+      .attr('transform', (d: any, i: number) => this.getTranslateString(i));
+    en.append('rect')
+      .merge(groups.select('rect'))
+      .attr('height', (d: any) => this.squareSide)
+      .attr('width', (d: any) => this.squareSide)
+      .transition()
+      .duration(1000)
+      .attr('fill', (d: any) => d.color);
+    //this.data = this.data.map((d : any) => ({...d, color: this.getRandomColor()}));
 
-      let circles = this.textsAndNodes.append("rect")
-      .attr("width",(d: any) => 10)
-      .attr("height",(d: any) => 10)
-      .attr('fill', function (d: any) {
-        return 'blue';
-      })
-      .attr("rx",(d:any)=>d.body.length === 2? 10 :0)
-      .attr("ry",(d:any)=>d.body.length === 2? 10 :0)
-
-      let texts = this.textsAndNodes.append("text").text((d: any) => this.isArray(d.body)? d.body[1].key + ':' + d.body[1].value : "<subject>" );
-
-      console.log(this.globalGraph.nodes);
-      
-      this.textsAndNodes
-      .call(
-        drag()
-          .on('start', this.dragstarted.bind(this))
-          .on('drag', this.dragged.bind(this))
-          .on('end', this.dragended.bind(this))
-      );
-      
+    timeout(() => this.render(), 1000);
   }
 
-  ticked() {
-    this.textsAndNodes.attr('transform', (d: any) => {return "translate(" + d.x + "," + d.y + ")"});
-    this.link
-      .attr('x1', function (d: any) {
-        return d.source.x;
-      })
-      .attr('y1', function (d: any) {
-        return d.source.y;
-      })
-      .attr('x2', function (d: any) {
-        return d.target.x;
-      })
-      .attr('y2', function (d: any) {
-        return d.target.y;
-      });
-
-
-  }
-
-  dragstarted(d: any) {
-    if (!d.active) this.simulation.alphaTarget(0.3).restart();
-    d.subject.fx = d.x;
-    d.subject.fy = d.y;
-  }
-
-  dragged(d: any) {
-    d.subject.fx = d.x;
-    d.subject.fy = d.y;
-  }
-
-  dragended(d: any) {
-    if (!d.active) this.simulation.alphaTarget(0);
-    d.subject.fx = null;
-    d.subject.fy = null;
-  }
-
-  localSelector(selector: string) {
-    return select(this.elem).select(selector);
-  }
-
-  fill(l: any) {
-    let divs = this.svg.selectAll('div').data(l);
-    divs
-      .enter()
-      .append('div')
-      .merge(divs)
-      .text((d: string) => d);
-    divs.exit().remove();
-  }
-
-  objectToGraph(obj: any) {
-    this.initNodes(obj);
-
-    //this.globalGraph.links.push({source: newNode, target: this.globalGraph.nodes[0]});
-
-    //create the node data
-
-    //create a node for each son
-
-    //create links between the node and the sons
-  }
-
-  isBasic(obj: any) {
-    return !(this.isObject(obj) || this.isArray(obj));
-  }
-
-  initNodes(obj: any) {
-    let objectEntries = Object.entries(obj);
-    //base case, there are no more sons that are arrays or objects
-    if (!objectEntries.some(([key, value]) => this.isBasic(value))) {
-    } else {
-      let newNode = new Node();
-      //recursive case, there are sons that are arrays or objects
-
-      //add the basic type objects to the node
-      let basicKeys = objectEntries.filter(([key, value]) =>
-        this.isBasic(value)
-      );
-      newNode.body = { ...basicKeys.map(([k, v]) => ({ key: k, value: v }))};
-
-      let newNodeEntries = Object.entries(newNode.body);
-      let newNodeSons = newNodeEntries.map((value) => new Node(value));
-      this.globalGraph.nodes = [
-        ...this.globalGraph.nodes,
-        ...newNodeSons,
-        newNode,
-      ];
-      this.initLinks(newNode, newNodeSons);
+  setData(record: any, side: number) {
+    let data = [];
+    for (let i = 0; i < side * side; i++) {
+      data.push(record);
     }
+    return data;
   }
 
-  initLinks(parent: any, sons: any) {
-    sons.forEach((son: any) => {
-      this.globalGraph.links.push({ source: parent, target: son });
-    });
+  getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
-  getLinks(
-    parent: any,
-    sons: Node[]
-  ): SimulationLinkDatum<Node>[] {
-    let result: SimulationLinkDatum<Node>[] = [];
-    sons.forEach((son: any) => {
-      result.push({ source: parent, target: son });
-    });
+  randomNumber(min: number, max: number, round: boolean = true) {
+    let randomNumber = Math.random() * (max - min) + min;
+    return round ? Math.floor(randomNumber) : randomNumber;
+  }
+
+  getXY(i: number, a: any) {
+    let side = Math.sqrt(a.length);
+    let x = i % side;
+    let y = Math.floor(i / side);
+    return { x: x, y: y };
+  }
+  getTranslateString(x: number) {
+    let result =
+      'translate(' +
+      this.getXY(x, this.data).x * this.squareSide +
+      ',' +
+      this.getXY(x, this.data).y * this.squareSide +
+      ')';
     return result;
   }
 
-  graphFromObject(obj: any): {
-    nodes: SimulationNodeDatum[];
-    links: SimulationLinkDatum<Node>[];
-  } {
-    let objectEntries = Object.entries(obj);
-    let result: {
-      nodes: SimulationNodeDatum[];
-      links: SimulationLinkDatum<Node>[];
-    } = { nodes: [], links: [] };
-
-    if (!objectEntries.some(([key, value]) => this.isBasic(value))) {
-    //end of object exploration
-    } 
-    
-    else {
-      let newNode = new Node();
-
-      //add the basic type objects to the node
-      let basicKeys = objectEntries.filter(([key, value]) =>
-        this.isBasic(value)
-      );
-      newNode.body = { ...basicKeys.map(([k, v]) => ({ key: k, value: v })) };
-
-      let newNodeEntries = Object.entries(newNode.body);
-      let newNodeSons = newNodeEntries.map((value) => new Node(value));
-      result.nodes = [...result.nodes, ...newNodeSons, newNode];
-      result.links = [...result.links, ...this.getLinks(newNode, newNodeSons)];
-
-      //adding nested graphs
-
-      let nestedObjects = objectEntries.filter(([key, value]) =>
-      this.isObject(value)
-    );
-    let nestedGraphs = nestedObjects.map(([key, value]) =>
-      this.graphFromObject(value)
-    );
-
-    nestedGraphs.forEach((graph: any) => {
-      result.nodes = [...result.nodes, ...graph.nodes];
-      result.links = [...result.links, ...graph.links, {source: newNode, target: this.getFirstNode(graph.links)}];
+  linkSquares() {
+    let downLimit = this.data.length - this.sideLength;
+    let upLimit = this.sideLength;
+    this.data = this.data.map((d: any, i: number) => {
+      let upIndex = this.data.length - i - 1;
+      let downIndex = i + this.sideLength;
+      let result = { ...d };
+      if (i < downLimit) {
+        if (i < upLimit) {
+          //assign value to the upper row
+          //result.color = "blue";
+          result.down = downIndex;
+        } else {
+          //assign value to the rows different from upper and lower
+          //result.color = "green";
+          result.up = upIndex;
+          result.down = downIndex;
+        }
+      } else {
+        //assign vaue to the lower row
+        //result.color = "red";
+        result.up = upIndex;
+      }
+      return result;
     });
+  }
+
+  colorDownRow(cell: any) {
+    if (cell.down >= 0) {
+      this.data[cell.down].color = 'yellow';
     }
-    return result;
   }
 
-  getFirstNode(links: any) {
-    return links.filter((link: any) => !links.some((secondLink: any) => secondLink.target === link.source))[0].source;
+  colorUpRow(cell: any) {
+    if (cell.up >= 0) {
+      console.log(cell.up);
+      this.data[cell.up].color = 'purple';
+    }
   }
 
-  isObject(obj: any) {
-    return typeof obj === 'object' && obj !== null;
+  mapUpCell(f: any) {
+    this.data.filter(( cell:any ) => cell.up >= 0)
+    .map((cell:any) => this.data[cell.up])
+    .forEach((cellUp : any) => f(cellUp));
   }
 
-  isArray(obj: any) {
-    return Array.isArray(obj);
+  mapDownCell(f: any) {
+    this.data.filter(( cell:any ) => cell.down >= 0)
+    .map((cell:any) => this.data[cell.down])
+    .forEach((cellDown : any) => f(cellDown));
   }
+
 }
