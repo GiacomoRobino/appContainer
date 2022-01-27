@@ -128,6 +128,7 @@ export class JsonToGraphComponent implements OnInit {
 
     en.append('text').merge(groups.select('text')).text((d: any) => d.age > 0 ? d.age : '')
         .attr('fill', 'white')
+        .attr('fill-opacity', (d: any) => 1.0 - ((1.0/d.age)*1.3))
         .attr('x', '5px')
         .attr('y', '15px');
 
