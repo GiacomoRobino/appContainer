@@ -2,7 +2,7 @@ import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/temp
 import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { setClassMetadata } from '@angular/core/src/r3_symbols';
-import { easeBounceInOut, easeCubic, easeCubicIn, easeElasticIn, easeQuadInOut, easeSinInOut, select, timeout } from 'd3';
+import { easeBounceInOut, easeCubic, easeCubicIn, easeCubicInOut, easeCubicOut, easeElasticIn, easeQuadInOut, easeSinInOut, select, timeout } from 'd3';
 
 @Component({
   selector: 'app-json-to-graph',
@@ -33,7 +33,7 @@ export class JsonToGraphComponent implements OnInit {
   public data: any;
   public frameCount = 0;
 
-  public sideLength: number = 40;
+  public sideLength: number = 25;
   public ageLimit = 3;
 
   ngOnInit(): void {
@@ -50,8 +50,8 @@ export class JsonToGraphComponent implements OnInit {
     //this.mapDownCell(this.colorDown);
 
     this.mapEachCell(this.randomColorStartingCell.bind(this));
-
-    this.startAnimation();
+    this.render();
+    //this.startAnimation();
   }
 
   
@@ -72,7 +72,7 @@ export class JsonToGraphComponent implements OnInit {
 
 
   randomColorStartingCell(cell: any) {
-    if (Math.random() > 0.9998 && !cell.isOn) {
+    if (Math.random() > 0.9995 && !cell.isOn) {
       return { ...cell, isOn: true, nextColor: "green", age: this.randomNumber(1, this.ageLimit, true)};
     } else {
       return { ...cell};
@@ -122,23 +122,23 @@ export class JsonToGraphComponent implements OnInit {
       .attr('width', (d: any) => this.squareSide)
     rectangles
       .transition()
-      .duration((d :any) => 300 - (d.age ))
-      .ease(easeCubicIn)
+      .duration((d :any) => 500 - (d.age ))
+      .ease(easeCubicInOut)
       .attr('fill', (d: any) => d.color)
-
+/*
     en.append('text').merge(groups.select('text')).text((d: any) => d.age > 0 ? d.age : '')
         .attr('fill', 'white')
-        .attr('fill-opacity', (d: any) => 1.0 - ((1.0/d.age)*1.3))
+        .attr('fill-opacity', (d: any) => 1.0 - ((1.0/d.age)*3))
         .attr('x', '5px')
         .attr('y', '15px');
-
+*/
     if(this.frameCount % 1 === 0) {
     this.lookUpCell(this.matrixUp);
     this.mapEachCell(this.generateSuccessors);
     this.mapEachCell(this.killOldCells.bind(this));
     this.mapEachCell(this.randomColorStartingCell.bind(this));
     }
-    //timeout(() => this.render(), 20);
+    timeout(() => this.render(), 150);
   }
 
   generateSuccessors(cell: any) {
