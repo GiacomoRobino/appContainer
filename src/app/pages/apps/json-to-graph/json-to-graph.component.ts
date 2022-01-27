@@ -2,7 +2,7 @@ import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/temp
 import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { setClassMetadata } from '@angular/core/src/r3_symbols';
-import { easeCubicIn, select, timeout } from 'd3';
+import { easeBounceInOut, easeCubic, easeCubicIn, easeElasticIn, easeQuadInOut, easeSinInOut, select, timeout } from 'd3';
 
 @Component({
   selector: 'app-json-to-graph',
@@ -33,7 +33,7 @@ export class JsonToGraphComponent implements OnInit {
   public data: any;
   public frameCount = 0;
 
-  public sideLength: number = 20;
+  public sideLength: number = 40;
   public ageLimit = 3;
 
   ngOnInit(): void {
@@ -64,9 +64,9 @@ export class JsonToGraphComponent implements OnInit {
 
   animationLoop() {
     this.frameCount += 1;
-    if(this.frameCount%1000 === 0){
+    
     this.render();
-    }
+    
     requestAnimationFrame(this.animationLoop.bind(this));
   }
 
@@ -122,7 +122,7 @@ export class JsonToGraphComponent implements OnInit {
       .attr('width', (d: any) => this.squareSide)
     rectangles
       .transition()
-      .duration((d :any) => 100 - (d.age ))
+      .duration((d :any) => 300 - (d.age ))
       .ease(easeCubicIn)
       .attr('fill', (d: any) => d.color)
 
@@ -131,12 +131,13 @@ export class JsonToGraphComponent implements OnInit {
         .attr('x', '5px')
         .attr('y', '15px');
 
-
+    if(this.frameCount % 1 === 0) {
     this.lookUpCell(this.matrixUp);
     this.mapEachCell(this.generateSuccessors);
     this.mapEachCell(this.killOldCells.bind(this));
     this.mapEachCell(this.randomColorStartingCell.bind(this));
-    timeout(() => this.render(), 20);
+    }
+    //timeout(() => this.render(), 20);
   }
 
   generateSuccessors(cell: any) {
