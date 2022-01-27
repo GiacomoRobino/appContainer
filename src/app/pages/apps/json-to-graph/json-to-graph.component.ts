@@ -29,9 +29,11 @@ export class JsonToGraphComponent implements OnInit {
   public width: any;
   public innerWidth: number = 0;
   public circles: any;
-  public sideLength: number = 100;
+  public sideLength: number = 20;
   public squareSide: number = 0;
   public data: any;
+  public frameCount = 0;
+  public ageLimit = 40;
 
   ngOnInit(): void {
     this.svg = select('.fill-app');
@@ -39,30 +41,61 @@ export class JsonToGraphComponent implements OnInit {
     //TODO: ottenere altezza svg
     this.squareSide = 500 / this.sideLength; //parseInt(h) / this.sideLength;
     this.data = this.setData(
-      {
-        text: 'a',
-        color: 'black',
-        nextColor: 'black',
-        letter: 'a',
-        up: -1,
-        down: -1,
-        isOn: false,
-      },
+      this.getDefaultOffCell(),
       this.sideLength
     );
     this.linkSquares();
     //this.mapUpCell(this.colorUp);
     //this.mapDownCell(this.colorDown);
 
-    this.mapEachCell(this.randomColorStartingCell);
+    this.mapEachCell(this.randomColorStartingCell.bind(this));
 
-    this.render();
+    this.startAnimation();
   }
+
+  
+
+  startAnimation() {
+    this.render();
+    window.requestAnimationFrame(this.animationLoop.bind(this));
+  }
+
+
+  animationLoop() {
+    this.frameCount += 1;
+    if(this.frameCount%6000 === 0){
+    this.render();
+    }
+    requestAnimationFrame(this.animationLoop.bind(this));
+  }
+
+
   randomColorStartingCell(cell: any) {
     if (Math.random() > 0.9995 && !cell.isOn) {
-      return { ...cell, isOn: true, color: 'green', nextColor: 'green' };
+      return { ...cell, isOn: true, nextColor: 'green', age: this.randomNumber(1, this.ageLimit, true)};
     } else {
       return { ...cell};
+    }
+  }
+
+  killOldCells(cell: any) {
+    if (cell.age > 0) {
+      return { ...cell, age: cell.age - 1};
+    } else {
+      return {...cell, color : "black", isOn: false, age: 0};
+    }
+  }
+
+  getDefaultOffCell() {
+    return {
+      text: 'a',
+      color: 'black',
+      nextColor: 'black',
+      letter: 'a',
+      up: -1,
+      down: -1,
+      isOn: false,
+      age: 0
     }
   }
 
@@ -74,6 +107,7 @@ export class JsonToGraphComponent implements OnInit {
     cell.color = 'green';
   }
   render() {
+    let transitionTime = 100;
     let groups = this.svg.selectAll('g');
     let g = groups.data(this.data);
     let en = g
@@ -86,24 +120,25 @@ export class JsonToGraphComponent implements OnInit {
       .attr('height', (d: any) => this.squareSide)
       .attr('width', (d: any) => this.squareSide)
       .transition()
-      .duration(40)
+      .duration(100)
       .attr('fill', (d: any) => d.color);
-    /*
-    en.append('text')
-      .merge(groups.select('text'))
-      .text((d: any, i: number) => i)
-      .attr("fill", "black")
-      .attr("y", "20px")
-*/
+
+    en.append('text').merge(groups.select('text')).text((d: any) => d.age > 0 ? d.age : '')
+        .attr('fill', 'white')
+        .attr('x', '5px')
+        .attr('y', '15px');
+
     this.lookUpCell(this.matrixUp);
-    this.data = this.data.map((d: any) =>
-      d.nextColor === 'green'
-        ? { ...d, color: d.nextColor, isOn: true }
-        : { ...d, color: 'black' }
-    );
-    
-    this.mapEachCell(this.randomColorStartingCell);
+    this.mapEachCell(this.generateSuccessors);
+    this.mapEachCell(this.killOldCells.bind(this));
+    this.mapEachCell(this.randomColorStartingCell.bind(this));
     timeout(() => this.render(), 20);
+  }
+
+  generateSuccessors(cell: any) {
+    return  cell.nextColor === 'green'
+    ? { ...cell, color: cell.nextColor, isOn: true }
+    : { ...cell, color: 'black' }
   }
 
   setData(record: any, side: number) {
@@ -177,18 +212,21 @@ export class JsonToGraphComponent implements OnInit {
     }
   }
 
-  matrixUp(cellUp: any, cell: any) {
-    if (cellUp.isOn) {
-      cell.nextColor = 'green';
-    }
-  }
-
   colorUpRow(cell: any) {
     if (cell.up >= 0) {
       console.log(cell.up);
       this.data[cell.up].color = 'purple';
     }
   }
+
+  
+  matrixUp(cellUp: any, cell: any) {
+    if (cellUp.isOn) {
+      cell.nextColor = 'green';
+      cell.age = cellUp.age + 1;
+    }
+  }
+
 
   lookUpCell(callback: any) {
     this.data
