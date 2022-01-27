@@ -43,7 +43,7 @@ export class JsonToGraphComponent implements OnInit {
     );
     this.linkSquares();
     this.mapUpCell(this.colorUp);
-    //this.mapUpCell(this.colorDown);
+    this.mapDownCell(this.colorDown);
 
     this.render();
   }
