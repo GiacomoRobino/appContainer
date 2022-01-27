@@ -29,7 +29,7 @@ export class JsonToGraphComponent implements OnInit {
   public width: any;
   public innerWidth: number = 0;
   public circles: any;
-  public sideLength: number = 4;
+  public sideLength: number = 100;
   public squareSide: number = 0;
   public data: any;
 
@@ -38,12 +38,29 @@ export class JsonToGraphComponent implements OnInit {
     //TODO: ottenere altezza svg
     this.squareSide = 500 / this.sideLength; //parseInt(h) / this.sideLength;
     this.data = this.setData(
-      { text: 'a', color: 'red', letter: 'a', up: -1, down: -1 },
+      { text: 'a', color: 'grey', nextColor: 'grey', letter: 'a', up: -1, down: -1 , isOn : false},
       this.sideLength
     );
     this.linkSquares();
-    this.mapUpCell(this.colorUp);
-    this.mapDownCell(this.colorDown);
+    //this.mapUpCell(this.colorUp);
+    //this.mapDownCell(this.colorDown);
+
+    this.data = this.data.map((d : any) => {
+      if(Math.random() > 0.95){
+      return {...d, isOn: true}}
+      else {
+        return {...d, isOn: false}
+      }
+    });
+
+    this.data = this.data.map((d : any) => {
+      if(d.isOn) {
+      return {...d, color: "green"}}
+      else {
+        return {...d}
+      }
+    });
+
 
     this.render();
   }
@@ -69,9 +86,20 @@ export class JsonToGraphComponent implements OnInit {
       .transition()
       .duration(1000)
       .attr('fill', (d: any) => d.color);
-    //this.data = this.data.map((d : any) => ({...d, color: this.getRandomColor()}));
-
-    timeout(() => this.render(), 1000);
+    /*
+    en.append('text')
+      .merge(groups.select('text'))
+      .text((d: any, i: number) => i)
+      .attr("fill", "black")
+      .attr("y", "20px")
+*/
+    this.lookUpCell(this.matrixUp);
+    this.data = this.data
+    .map((d : any) => (
+      d.nextColor === 'green' ? { ...d, color: d.nextColor, isOn: true} : {...d, color: 'grey'}
+      )
+      );
+    timeout(() => this.render(), 400);
   }
 
   setData(record: any, side: number) {
@@ -116,7 +144,7 @@ export class JsonToGraphComponent implements OnInit {
     let downLimit = this.data.length - this.sideLength;
     let upLimit = this.sideLength;
     this.data = this.data.map((d: any, i: number) => {
-      let upIndex = this.data.length - i - 1;
+      let upIndex = i - this.sideLength;
       let downIndex = i + this.sideLength;
       let result = { ...d };
       if (i < downLimit) {
@@ -145,12 +173,24 @@ export class JsonToGraphComponent implements OnInit {
     }
   }
 
+  matrixUp(cellUp: any, cell: any) {
+    if(cellUp.isOn){
+      cell.nextColor = 'green';
+    }
+  }
+
+  lookUpCell(callback: any) {
+    this.data.filter(( cell:any ) => cell.up >= 0)
+    .forEach((cellUp : any) => callback(this.data[cellUp.up], cellUp));
+  }
+
   colorUpRow(cell: any) {
     if (cell.up >= 0) {
       console.log(cell.up);
       this.data[cell.up].color = 'purple';
     }
   }
+
 
   mapUpCell(f: any) {
     this.data.filter(( cell:any ) => cell.up >= 0)
