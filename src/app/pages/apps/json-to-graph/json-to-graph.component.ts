@@ -29,40 +29,41 @@ export class JsonToGraphComponent implements OnInit {
   public width: any;
   public innerWidth: number = 0;
   public circles: any;
-  public sideLength: number = 20;
+  public sideLength: number = 100;
   public squareSide: number = 0;
   public data: any;
 
   ngOnInit(): void {
     this.svg = select('.fill-app');
+    this.svg.attr('shaper-rendering', 'crispEdges');
     //TODO: ottenere altezza svg
     this.squareSide = 500 / this.sideLength; //parseInt(h) / this.sideLength;
     this.data = this.setData(
-      { text: 'a', color: 'grey', nextColor: 'grey', letter: 'a', up: -1, down: -1 , isOn : false},
+      {
+        text: 'a',
+        color: 'black',
+        nextColor: 'black',
+        letter: 'a',
+        up: -1,
+        down: -1,
+        isOn: false,
+      },
       this.sideLength
     );
     this.linkSquares();
     //this.mapUpCell(this.colorUp);
     //this.mapDownCell(this.colorDown);
 
-    this.data = this.data.map((d : any) => {
-      if(Math.random() > 0.95){
-      return {...d, isOn: true}}
-      else {
-        return {...d, isOn: false}
-      }
-    });
-
-    this.data = this.data.map((d : any) => {
-      if(d.isOn) {
-      return {...d, color: "green", nextColor: "green"}}
-      else {
-        return {...d}
-      }
-    });
-
+    this.mapEachCell(this.randomColorStartingCell);
 
     this.render();
+  }
+  randomColorStartingCell(cell: any) {
+    if (Math.random() > 0.9995 && !cell.isOn) {
+      return { ...cell, isOn: true, color: 'green', nextColor: 'green' };
+    } else {
+      return { ...cell};
+    }
   }
 
   colorUp(cell: any) {
@@ -81,10 +82,11 @@ export class JsonToGraphComponent implements OnInit {
       .attr('transform', (d: any, i: number) => this.getTranslateString(i));
     en.append('rect')
       .merge(groups.select('rect'))
+      .attr('shape-rendering', 'crispEdges')
       .attr('height', (d: any) => this.squareSide)
       .attr('width', (d: any) => this.squareSide)
       .transition()
-      .duration(1000)
+      .duration(40)
       .attr('fill', (d: any) => d.color);
     /*
     en.append('text')
@@ -94,12 +96,14 @@ export class JsonToGraphComponent implements OnInit {
       .attr("y", "20px")
 */
     this.lookUpCell(this.matrixUp);
-    this.data = this.data
-    .map((d : any) => (
-      d.nextColor === 'green' ? { ...d, color: d.nextColor, isOn: true} : {...d, color: 'grey'}
-      )
-      );
-    timeout(() => this.render(), 300);
+    this.data = this.data.map((d: any) =>
+      d.nextColor === 'green'
+        ? { ...d, color: d.nextColor, isOn: true }
+        : { ...d, color: 'black' }
+    );
+    
+    this.mapEachCell(this.randomColorStartingCell);
+    timeout(() => this.render(), 20);
   }
 
   setData(record: any, side: number) {
@@ -174,14 +178,9 @@ export class JsonToGraphComponent implements OnInit {
   }
 
   matrixUp(cellUp: any, cell: any) {
-    if(cellUp.isOn){
+    if (cellUp.isOn) {
       cell.nextColor = 'green';
     }
-  }
-
-  lookUpCell(callback: any) {
-    this.data.filter(( cell:any ) => cell.up >= 0)
-    .forEach((cellUp : any) => callback(this.data[cellUp.up], cellUp));
   }
 
   colorUpRow(cell: any) {
@@ -191,17 +190,27 @@ export class JsonToGraphComponent implements OnInit {
     }
   }
 
+  lookUpCell(callback: any) {
+    this.data
+      .filter((cell: any) => cell.up >= 0)
+      .forEach((cellUp: any) => callback(this.data[cellUp.up], cellUp));
+  }
 
   mapUpCell(f: any) {
-    this.data.filter(( cell:any ) => cell.up >= 0)
-    .map((cell:any) => this.data[cell.up])
-    .forEach((cellUp : any) => f(cellUp));
+    this.data
+      .filter((cell: any) => cell.up >= 0)
+      .map((cell: any) => this.data[cell.up])
+      .forEach((cellUp: any) => f(cellUp));
   }
 
   mapDownCell(f: any) {
-    this.data.filter(( cell:any ) => cell.down >= 0)
-    .map((cell:any) => this.data[cell.down])
-    .forEach((cellDown : any) => f(cellDown));
+    this.data
+      .filter((cell: any) => cell.down >= 0)
+      .map((cell: any) => this.data[cell.down])
+      .forEach((cellDown: any) => f(cellDown));
   }
 
+  mapEachCell(f: any) {
+    this.data = this.data.map((cell: any) => f(cell));
+  }
 }
