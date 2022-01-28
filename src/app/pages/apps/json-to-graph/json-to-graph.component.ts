@@ -125,7 +125,8 @@ export class JsonToGraphComponent implements OnInit {
 });
     en.append('text')
       .merge(groups.select('text'))
-      .text((d: any) => (d.age > 0 ? d.age : ''))
+      .filter((d: any) => d.age > 0)
+      .text((d: any) => (d.age))
       .attr('fill', (d: any) =>  d.isBugged? 'red' : 'green')
       .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
       //.attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 4) - d.age)))
