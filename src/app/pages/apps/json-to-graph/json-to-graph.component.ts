@@ -2,7 +2,18 @@ import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/temp
 import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { setClassMetadata } from '@angular/core/src/r3_symbols';
-import { easeBounceInOut, easeCubic, easeCubicIn, easeCubicInOut, easeCubicOut, easeElasticIn, easeQuadInOut, easeSinInOut, select, timeout } from 'd3';
+import {
+  easeBounceInOut,
+  easeCubic,
+  easeCubicIn,
+  easeCubicInOut,
+  easeCubicOut,
+  easeElasticIn,
+  easeQuadInOut,
+  easeSinInOut,
+  select,
+  timeout,
+} from 'd3';
 
 @Component({
   selector: 'app-json-to-graph',
@@ -17,7 +28,7 @@ export class JsonToGraphComponent implements OnInit {
   public svg: any;
   public xScale: any;
   public yScale: any;
-  public verticalSpacing = 20;
+  public verticalSpacing = 40;
   public xValue: any = (d: any) => d.price;
   public yValue: any = (d: any) => d.name;
 
@@ -33,7 +44,7 @@ export class JsonToGraphComponent implements OnInit {
   public data: any;
   public frameCount = 0;
 
-  public sideLength: number = 25;
+  public sideLength: number = 35;
   public ageLimit = 3;
 
   ngOnInit(): void {
@@ -41,10 +52,7 @@ export class JsonToGraphComponent implements OnInit {
     this.svg.attr('shaper-rendering', 'crispEdges');
     //TODO: ottenere altezza svg
     this.squareSide = 500 / this.sideLength; //parseInt(h) / this.sideLength;
-    this.data = this.setData(
-      this.getDefaultOffCell(),
-      this.sideLength
-    );
+    this.data = this.setData(this.sideLength);
     this.linkSquares();
     //this.mapUpCell(this.colorUp);
     //this.mapDownCell(this.colorDown);
@@ -54,36 +62,37 @@ export class JsonToGraphComponent implements OnInit {
     //this.startAnimation();
   }
 
-  
-
   startAnimation() {
     this.render();
     window.requestAnimationFrame(this.animationLoop.bind(this));
   }
 
-
   animationLoop() {
     this.frameCount += 1;
-    
+
     this.render();
-    
+
     requestAnimationFrame(this.animationLoop.bind(this));
   }
 
-
   randomColorStartingCell(cell: any) {
     if (Math.random() > 0.9995 && !cell.isOn) {
-      return { ...cell, isOn: true, nextColor: "green", age: this.randomNumber(1, this.ageLimit, true)};
+      return {
+        ...cell,
+        isOn: true,
+        nextColor: 'green',
+        age: this.randomNumber(1, this.ageLimit, true),
+      };
     } else {
-      return { ...cell};
+      return { ...cell };
     }
   }
 
   killOldCells(cell: any) {
     if (cell.age > 0) {
-      return { ...cell, age: cell.age - 1};
+      return { ...cell, age: cell.age - 1 };
     } else {
-      return {...cell, color : "black", isOn: false, age: 0};
+      return { ...cell, color: 'black', isOn: false, age: 0 };
     }
   }
 
@@ -96,8 +105,8 @@ export class JsonToGraphComponent implements OnInit {
       up: -1,
       down: -1,
       isOn: false,
-      age: 0
-    }
+      age: 0,
+    };
   }
 
   colorUp(cell: any) {
@@ -105,7 +114,7 @@ export class JsonToGraphComponent implements OnInit {
   }
 
   colorDown(cell: any) {
-    cell.color = "green";
+    cell.color = 'green';
   }
   render() {
     let transitionTime = 100;
@@ -115,6 +124,7 @@ export class JsonToGraphComponent implements OnInit {
       .enter()
       .append('g')
       .attr('transform', (d: any, i: number) => this.getTranslateString(i));
+    /*
     let rectangles = en.append('rect')
       .merge(groups.select('rect'))
       .attr('shape-rendering', 'crispEdges')
@@ -125,32 +135,40 @@ export class JsonToGraphComponent implements OnInit {
       .duration((d :any) => 500 - (d.age ))
       .ease(easeCubicInOut)
       .attr('fill', (d: any) => d.color)
-/*
-    en.append('text').merge(groups.select('text')).text((d: any) => d.age > 0 ? d.age : '')
-        .attr('fill', 'white')
-        .attr('fill-opacity', (d: any) => 1.0 - ((1.0/d.age)*3))
-        .attr('x', '5px')
-        .attr('y', '15px');
 */
-    if(this.frameCount % 1 === 0) {
-    this.lookUpCell(this.matrixUp);
-    this.mapEachCell(this.generateSuccessors);
-    this.mapEachCell(this.killOldCells.bind(this));
-    this.mapEachCell(this.randomColorStartingCell.bind(this));
+    let rectangles = en
+      .append('rect')
+      .merge(groups.select('rect'))
+      .attr('shape-rendering', 'crispEdges')
+      .attr('height', (d: any) => this.squareSide)
+      .attr('width', (d: any) => this.squareSide);
+    rectangles.attr('fill', (d: any) => 'black');
+    en.append('text')
+      .merge(groups.select('text'))
+      .text((d: any) => (d.age > 0 ? d.age : ''))
+      .attr('fill', 'green')
+      .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
+      //.attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 4) - d.age)))
+      .attr('font-size', '8px');
+    if (this.frameCount % 1 === 0) {
+      this.lookUpCell(this.matrixUp.bind(this));
+      this.mapEachCell(this.generateSuccessors);
+      this.mapEachCell(this.killOldCells.bind(this));
+      this.mapEachCell(this.randomColorStartingCell.bind(this));
     }
     timeout(() => this.render(), 150);
   }
 
   generateSuccessors(cell: any) {
-    return  cell.nextColor === 'green'
-    ? { ...cell, color: cell.nextColor, isOn: true }
-    : { ...cell, color: 'black' }
+    return cell.nextColor === 'green'
+      ? { ...cell, color: cell.nextColor, isOn: true }
+      : { ...cell, color: 'black' };
   }
 
-  setData(record: any, side: number) {
+  setData(side: number) {
     let data = [];
     for (let i = 0; i < side * side; i++) {
-      data.push(record);
+      data.push(this.getDefaultOffCell());
     }
     return data;
   }
@@ -225,14 +243,20 @@ export class JsonToGraphComponent implements OnInit {
     }
   }
 
-  
   matrixUp(cellUp: any, cell: any) {
     if (cellUp.isOn) {
-      cell.nextColor = "green";
+      if(cell.down >= 0){
+      if(!this.data[cell.down].isOn){
+        cell.nextColor = 'green';
+        cell.age = cellUp.age + 3;
+      }
+    }
+    else{
+      cell.nextColor = 'green';
       cell.age = cellUp.age + 3;
     }
+    }
   }
-
 
   lookUpCell(callback: any) {
     this.data
