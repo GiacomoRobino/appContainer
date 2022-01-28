@@ -76,7 +76,7 @@ export class JsonToGraphComponent implements OnInit {
     if (cell.age > 0) {
       return { ...cell, age: cell.age - 1 };
     } else {
-      return { ...cell, isOn: false, age: 0 };
+      return { ...cell, isBugged: false || cell.isStartingBug, isOn: false, age: 0 };
     }
   }
 
@@ -88,7 +88,7 @@ export class JsonToGraphComponent implements OnInit {
       isOn: false,
       age: 0,
       isBugged: false,
-      startingBug: 'false',
+      startingBug: false,
     };
   }
   render() {
@@ -213,8 +213,8 @@ export class JsonToGraphComponent implements OnInit {
   }
 
   matrixUp(cellUp: any, cell: any) {
-    cell.isBugged = cell.isBugged || cellUp.isBugged;
     if (cellUp.isOn) {
+      cell.isBugged = cell.isBugged || cellUp.isBugged || cell.startingBug;
       if(cell.down >= 0){
       if(!this.data[cell.down].isOn){
         cell.nextColor = 'green';
@@ -225,6 +225,9 @@ export class JsonToGraphComponent implements OnInit {
       cell.nextColor = 'green';
       cell.age = cellUp.age + 3;
     }
+    }
+    else{
+      cell.isBugged = false || cell.isStartBug;
     }
   }
 
