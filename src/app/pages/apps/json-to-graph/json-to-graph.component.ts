@@ -142,12 +142,12 @@ export class JsonToGraphComponent implements OnInit {
       .append('rect')
       .merge(groups.select('rect'))
       .attr('shape-rendering', 'crispEdges')
-      .attr('height', (d: any) => this.squareSide)
-      .attr('width', (d: any) => this.squareSide);
+      .attr('height', (d: any) => this.squareSide - (d.startingBug === true? 1 : 0))
+      .attr('width', (d: any) => this.squareSide- (d.startingBug === true? 1 : 0));
 
     
-      rectangles.attr('style', (d: any) => d.startingBug === true? "outline: thin solid red;" : '');
-    rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
+      rectangles.attr('style', (d: any) => d.startingBug === true? "outline: solid red;" : '');
+      rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
       this.bugOnSelect(selectedItem);
 });
     en.append('text')
@@ -157,7 +157,8 @@ export class JsonToGraphComponent implements OnInit {
       .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
       //.attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 4) - d.age)))
       .attr('font-size', '8px')
-      .attr('y', "7px")
+      .attr('y', "10px")
+      .attr('x', "7px")
       ;
     if (this.frameCount % 1 === 0) {
       this.lookUpCell(this.matrixUp.bind(this));
