@@ -44,7 +44,7 @@ export class JsonToGraphComponent implements OnInit {
   public data: any;
   public frameCount = 0;
 
-  public sideLength: number = 35;
+  public sideLength: number = 25;
   public ageLimit = 3;
 
   ngOnInit(): void {
@@ -92,7 +92,7 @@ export class JsonToGraphComponent implements OnInit {
     if (cell.age > 0) {
       return { ...cell, age: cell.age - 1 };
     } else {
-      return { ...cell, color: 'black', isOn: false, age: 0 };
+      return { ...cell, color:  cell.isBugged? 'red' : 'black', isOn: false, age: 0 };
     }
   }
 
@@ -106,6 +106,8 @@ export class JsonToGraphComponent implements OnInit {
       down: -1,
       isOn: false,
       age: 0,
+      isBugged: false,
+      startingBug: 'false',
     };
   }
 
@@ -142,14 +144,21 @@ export class JsonToGraphComponent implements OnInit {
       .attr('shape-rendering', 'crispEdges')
       .attr('height', (d: any) => this.squareSide)
       .attr('width', (d: any) => this.squareSide);
-    rectangles.attr('fill', (d: any) => 'black');
+
+    
+      rectangles.attr('style', (d: any) => d.startingBug === true? "outline: thin solid red;" : '');
+    rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
+      this.bugOnSelect(selectedItem);
+});
     en.append('text')
       .merge(groups.select('text'))
       .text((d: any) => (d.age > 0 ? d.age : ''))
-      .attr('fill', 'green')
+      .attr('fill', (d: any) =>  d.isBugged? 'red' : 'green')
       .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
       //.attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 4) - d.age)))
-      .attr('font-size', '8px');
+      .attr('font-size', '8px')
+      .attr('y', "7px")
+      ;
     if (this.frameCount % 1 === 0) {
       this.lookUpCell(this.matrixUp.bind(this));
       this.mapEachCell(this.generateSuccessors);
@@ -159,10 +168,15 @@ export class JsonToGraphComponent implements OnInit {
     timeout(() => this.render(), 150);
   }
 
+  bugOnSelect(cell: any) {
+    this.data[cell.up + this.sideLength].isBugged = true;
+    this.data[cell.up + this.sideLength].startingBug = true;
+  }
+
   generateSuccessors(cell: any) {
     return cell.nextColor === 'green'
       ? { ...cell, color: cell.nextColor, isOn: true }
-      : { ...cell, color: 'black' };
+      : { ...cell, color: cell.isBugged? 'red' : 'black' };
   }
 
   setData(side: number) {
@@ -244,6 +258,7 @@ export class JsonToGraphComponent implements OnInit {
   }
 
   matrixUp(cellUp: any, cell: any) {
+    cell.isBugged = cell.isBugged || cellUp.isBugged;
     if (cellUp.isOn) {
       if(cell.down >= 0){
       if(!this.data[cell.down].isOn){
