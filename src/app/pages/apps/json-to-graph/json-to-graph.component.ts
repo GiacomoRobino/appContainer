@@ -54,26 +54,10 @@ export class JsonToGraphComponent implements OnInit {
     this.squareSide = 500 / this.sideLength; //parseInt(h) / this.sideLength;
     this.data = this.setData(this.sideLength);
     this.linkSquares();
-    //this.mapUpCell(this.colorUp);
-    //this.mapDownCell(this.colorDown);
-
     this.mapEachCell(this.randomColorStartingCell.bind(this));
     this.render();
-    //this.startAnimation();
   }
 
-  startAnimation() {
-    this.render();
-    window.requestAnimationFrame(this.animationLoop.bind(this));
-  }
-
-  animationLoop() {
-    this.frameCount += 1;
-
-    this.render();
-
-    requestAnimationFrame(this.animationLoop.bind(this));
-  }
 
   randomColorStartingCell(cell: any) {
     if (Math.random() > 0.9995 && !cell.isOn) {
@@ -92,16 +76,13 @@ export class JsonToGraphComponent implements OnInit {
     if (cell.age > 0) {
       return { ...cell, age: cell.age - 1 };
     } else {
-      return { ...cell, color:  cell.isBugged? 'red' : 'black', isOn: false, age: 0 };
+      return { ...cell, isOn: false, age: 0 };
     }
   }
 
   getDefaultOffCell() {
     return {
-      text: 'a',
-      color: 'black',
       nextColor: 'black',
-      letter: 'a',
       up: -1,
       down: -1,
       isOn: false,
@@ -109,14 +90,6 @@ export class JsonToGraphComponent implements OnInit {
       isBugged: false,
       startingBug: 'false',
     };
-  }
-
-  colorUp(cell: any) {
-    cell.color = 'yellow';
-  }
-
-  colorDown(cell: any) {
-    cell.color = 'green';
   }
   render() {
     let transitionTime = 100;
@@ -176,8 +149,8 @@ export class JsonToGraphComponent implements OnInit {
 
   generateSuccessors(cell: any) {
     return cell.nextColor === 'green'
-      ? { ...cell, color: cell.nextColor, isOn: true }
-      : { ...cell, color: cell.isBugged? 'red' : 'black' };
+      ? { ...cell, isOn: true}
+      : { ...cell};
   }
 
   setData(side: number) {
@@ -227,35 +200,16 @@ export class JsonToGraphComponent implements OnInit {
       let result = { ...d };
       if (i < downLimit) {
         if (i < upLimit) {
-          //assign value to the upper row
-          //result.color = "blue";
           result.down = downIndex;
         } else {
-          //assign value to the rows different from upper and lower
-          //result.color = "green";
           result.up = upIndex;
           result.down = downIndex;
         }
       } else {
-        //assign vaue to the lower row
-        //result.color = "red";
         result.up = upIndex;
       }
       return result;
     });
-  }
-
-  colorDownRow(cell: any) {
-    if (cell.down >= 0) {
-      this.data[cell.down].color = 'yellow';
-    }
-  }
-
-  colorUpRow(cell: any) {
-    if (cell.up >= 0) {
-      console.log(cell.up);
-      this.data[cell.up].color = 'purple';
-    }
   }
 
   matrixUp(cellUp: any, cell: any) {
@@ -298,3 +252,29 @@ export class JsonToGraphComponent implements OnInit {
     this.data = this.data.map((cell: any) => f(cell));
   }
 }
+
+
+/*
+  colorUp(cell: any) {
+    cell.color = 'yellow';
+  }
+
+  colorDown(cell: any) {
+    cell.color = 'green';
+  }
+
+  
+  colorDownRow(cell: any) {
+    if (cell.down >= 0) {
+      this.data[cell.down].color = 'yellow';
+    }
+  }
+
+  colorUpRow(cell: any) {
+    if (cell.up >= 0) {
+      console.log(cell.up);
+      this.data[cell.up].color = 'purple';
+    }
+  }
+
+*/
