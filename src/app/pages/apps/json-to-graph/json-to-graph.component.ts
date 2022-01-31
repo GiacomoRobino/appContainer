@@ -43,7 +43,7 @@ export class JsonToGraphComponent implements OnInit {
   public squareSide: number = 0;
   public data: any;
   
-  public timeFrame = 1520;
+  public timeFrame = 520;
   public sideLength: number = 15;
   public ageLimit = 1;
 
@@ -226,19 +226,26 @@ export class JsonToGraphComponent implements OnInit {
   updateNextAges(cellUp: any, cell: any) {
     if (cellUp.age > 0) {
         cell.nextAge = cellUp.age + 1;
+        cell.new = true;
       }
     return cell;
   }
 
   updateAges(cell: any) {
+    if (cell.new) {
         cell.age = cell.nextAge;
-        return cell;
+        cell.new = false;
+    }
+    if(!cell.new){
+      cell.nextAge -= 1;
+    }
+    return cell;
   }
 
 
   killTrailingCell(cell: any) {
     if(cell.nextAge > 0) {
-      cell.nextAge -= 1;
+      cell.nextAge = cell.nextAge - 1;
     }
     return cell;
   }
