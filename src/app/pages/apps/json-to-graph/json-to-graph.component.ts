@@ -44,7 +44,7 @@ export class JsonToGraphComponent implements OnInit {
   public data: any;
   
   public timeFrame = 120;
-  public sideLength: number = 20;
+  public sideLength: number = 25;
   public ageLimit = 10;
 
   ngOnInit(): void {
@@ -95,11 +95,11 @@ export class JsonToGraphComponent implements OnInit {
       .append('rect')
       .merge(groups.select('rect'))
       .attr('shape-rendering', 'crispEdges')
-      .attr('height', (d: any) => this.squareSide - (d.body.border === true? 1 : 0))
-      .attr('width', (d: any) => this.squareSide- (d.body.border === true? 1 : 0));
+      .attr('height', (d: any) => this.squareSide)
+      .attr('width', (d: any) => this.squareSide);
 
     
-      rectangles.attr('style', (d: any) => d.body.border === true? d.body.border : '');
+      rectangles.attr('style', (d: any) => d.body.color);
       rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
       this.multOnSelect(selectedItem);
 });
@@ -108,9 +108,9 @@ export class JsonToGraphComponent implements OnInit {
       .merge(groups.select('text'))
       //.filter((d: any) => (d.age > 0 || d.nextAge > 0))
       .text((d: any) => (d.age))
-      .attr('fill', (d: any) =>  d.age > 0? "white": "black")
+      .attr('fill', (d: any) =>  d.body.color)
       //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
-      .attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 2) - d.age)))
+      .attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
       .attr('font-size', '8px')
       .attr('y', "10px")
       .attr('x', "7px")
@@ -130,14 +130,7 @@ export class JsonToGraphComponent implements OnInit {
     this.mapEachCell(this.updateAges.bind(this));
   }
   
-  emptyCell(cell : any) {
-    return {...cell,
-      age: 0,
-      nextAge: 0,
-      body: {color: "black"},
-      operations: []}
-      ;
-    }
+
     
     
     setData(side: number) {
@@ -200,20 +193,27 @@ export class JsonToGraphComponent implements OnInit {
     }
 
     multOnSelect(selectedItem: any) {
-      selectedItem.operations.append = (x: any) => x * 3;
-      selectedItem.body.border = "solid red";
+      selectedItem.operations.push = (x: any) => x * 3;
+      selectedItem.body.color = "red";
     }
     
     updateNextAges(cellUp: any, cell: any) {
       if (cell.age > 0) {
+        cell.body.color = "green";
         cell.nextAge -= 1;
         if(cell.nextAge <= 0) {
+          
+          cell.body.color = "black";
           cell.age = 0;
         }
       }
-      else if (cellUp.age > 0) {
+      
+      else if (cellUp){
+      if(cellUp.age > 0) {
+        cell.body.color = "white";
         cell.nextAge = cellUp.age + 1;
       }
+    }
     }
     
     updateAges(cell: any) {
@@ -224,12 +224,9 @@ export class JsonToGraphComponent implements OnInit {
     }
   
 
-
-
   lookUpCell(callback: any) {
     this.data
-      .filter((cell: any) => cell.up >= 0)
-      .forEach((cellUp: any) => callback(this.data[cellUp.up], cellUp));
+      .forEach((cell: any) => callback(this.data[cell.up], cell));
   }
 
   lookDownCell(callback: any) {
