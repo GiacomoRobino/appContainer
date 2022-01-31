@@ -43,7 +43,7 @@ export class JsonToGraphComponent implements OnInit {
   public squareSide: number = 0;
   public data: any;
   
-  public timeFrame = 120;
+  public timeFrame = 1120;
   public sideLength: number = 20;
   public ageLimit = 10;
 
@@ -60,13 +60,15 @@ export class JsonToGraphComponent implements OnInit {
 
 
   randomColorStartingCell(cell: any) {
-    if (Math.random() > 0.9995 && cell.age === 0) {
+    if (Math.random() > 0.9994 && cell.age === 0) {
+      let randomNumber = this.randomNumber(1, this.ageLimit, true)
       return {
         ...cell,
-        nextAge: this.randomNumber(1, this.ageLimit, true),
+        age: randomNumber,
+        nextAge: randomNumber,
       };
     } else {
-      return { ...cell };
+      return cell;
     }
   }
 
@@ -104,7 +106,7 @@ export class JsonToGraphComponent implements OnInit {
 
     en.append('text')
       .merge(groups.select('text'))
-      .filter((d: any) => d.nextAge > 0)
+      .filter((d: any) => (d.age > 0 || d.nextAge > 0))
       .text((d: any) => (d.age + "||" + d.nextAge))
       .attr('fill', (d: any) =>  "white")
       //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
@@ -118,31 +120,23 @@ export class JsonToGraphComponent implements OnInit {
 
       this.populateCells();
 
-      /*
-      this.lookUpCell(this.matrixUp.bind(this));
-      this.mapEachCell(this.generateSuccessors);
-      this.mapEachCell(this.killOldCells.bind(this));
-      this.mapEachCell(this.randomColorStartingCell.bind(this));
-      */
     
     timeout(() => this.render(), this.timeFrame);
   }
 
   populateCells() {
-    //kill old cells
-    this.mapEachCell(this.killOldCells.bind(this));
     //update all cells
     this.lookUpCell(this.updateNextAges.bind(this));
     this.mapEachCell(this.updateAges.bind(this));
-
-    //age all cells
-    //this.mapEachCell(this.killTrailingCell.bind(this));
   }
   
   emptyCell(cell : any) {
     return {...cell,
+      age: 0,
+      nextAge: 0,
       body: {color: "black"},
-      operations: []};
+      operations: []}
+      ;
     }
     
     
@@ -206,11 +200,15 @@ export class JsonToGraphComponent implements OnInit {
     }
     
     updateNextAges(cellUp: any, cell: any) {
-      if (cellUp.age > 0 && cell.age === 0) {
+      if (cell.age > 0) {
+        cell.nextAge -= 1;
+        if(cell.nextAge <= 0) {
+          cell.age = 0;
+        }
+      }
+      else if (cellUp.age > 0) {
         cell.nextAge = cellUp.age + 1;
       }
-      else{}
-      return cell;
     }
     
     updateAges(cell: any) {
@@ -220,21 +218,7 @@ export class JsonToGraphComponent implements OnInit {
       return cell;
     }
   
-    killOldCells(cell: any) {
-      if (cell.age > 0) {
-        return { ...cell, nextAge : cell.nextAge - 1};
-      } else {
-        return this.emptyCell(cell);
-      }
-    }
-    
 
-  killTrailingCell(cell: any) {
-    if(cell.nextAge > 0) {
-      cell.nextAge = cell.nextAge - 1;
-    }
-    return cell;
-  }
 
 
   lookUpCell(callback: any) {
