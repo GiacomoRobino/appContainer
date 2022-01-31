@@ -43,7 +43,7 @@ export class JsonToGraphComponent implements OnInit {
   public squareSide: number = 0;
   public data: any;
   
-  public timeFrame = 1120;
+  public timeFrame = 120;
   public sideLength: number = 20;
   public ageLimit = 10;
 
@@ -95,22 +95,22 @@ export class JsonToGraphComponent implements OnInit {
       .append('rect')
       .merge(groups.select('rect'))
       .attr('shape-rendering', 'crispEdges')
-      .attr('height', (d: any) => this.squareSide - (d.startingBug === true? 1 : 0))
-      .attr('width', (d: any) => this.squareSide- (d.startingBug === true? 1 : 0));
+      .attr('height', (d: any) => this.squareSide - (d.body.border === true? 1 : 0))
+      .attr('width', (d: any) => this.squareSide- (d.body.border === true? 1 : 0));
 
     
-      rectangles.attr('style', (d: any) => d.startingBug === true? "outline: solid red;" : '');
+      rectangles.attr('style', (d: any) => d.body.border === true? d.body.border : '');
       rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
- //     this.bugOnSelect(selectedItem);
+      this.multOnSelect(selectedItem);
 });
 
     en.append('text')
       .merge(groups.select('text'))
-      .filter((d: any) => (d.age > 0 || d.nextAge > 0))
-      .text((d: any) => (d.age + "||" + d.nextAge))
-      .attr('fill', (d: any) =>  "white")
+      //.filter((d: any) => (d.age > 0 || d.nextAge > 0))
+      .text((d: any) => (d.age))
+      .attr('fill', (d: any) =>  d.age > 0? "white": "black")
       //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
-      //.attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 4) - d.age)))
+      .attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 2) - d.age)))
       .attr('font-size', '8px')
       .attr('y', "10px")
       .attr('x', "7px")
@@ -197,6 +197,11 @@ export class JsonToGraphComponent implements OnInit {
         }
         return result;
       });
+    }
+
+    multOnSelect(selectedItem: any) {
+      selectedItem.operations.append = (x: any) => x * 3;
+      selectedItem.body.border = "solid red";
     }
     
     updateNextAges(cellUp: any, cell: any) {
