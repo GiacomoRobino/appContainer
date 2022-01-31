@@ -43,9 +43,9 @@ export class JsonToGraphComponent implements OnInit {
   public squareSide: number = 0;
   public data: any;
   
-  public timeFrame = 520;
-  public sideLength: number = 15;
-  public ageLimit = 1;
+  public timeFrame = 120;
+  public sideLength: number = 20;
+  public ageLimit = 10;
 
   ngOnInit(): void {
     this.svg = select('.fill-app');
@@ -63,9 +63,7 @@ export class JsonToGraphComponent implements OnInit {
     if (Math.random() > 0.9995 && cell.age === 0) {
       return {
         ...cell,
-        isOn: true,
-        nextColor: 'green',
-        age: this.randomNumber(1, this.ageLimit, true),
+        nextAge: this.randomNumber(1, this.ageLimit, true),
       };
     } else {
       return { ...cell };
@@ -74,8 +72,7 @@ export class JsonToGraphComponent implements OnInit {
 
   getDefaultOffCell() {
     return {
-      body: {},
-      color: 'black',
+      body: {color: "black"},
       up: -1,
       down: -1,
       age: 0,
@@ -107,8 +104,8 @@ export class JsonToGraphComponent implements OnInit {
 
     en.append('text')
       .merge(groups.select('text'))
-      .filter((d: any) => d.age > 0 || d.nextAge > 0)
-      .text((d: any) => (d.age + "-" + d.nextAge))
+      .filter((d: any) => d.nextAge > 0)
+      .text((d: any) => (d.age + "||" + d.nextAge))
       .attr('fill', (d: any) =>  "white")
       //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
       //.attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 4) - d.age)))
@@ -139,109 +136,98 @@ export class JsonToGraphComponent implements OnInit {
     this.mapEachCell(this.updateAges.bind(this));
 
     //age all cells
-    this.mapEachCell(this.killTrailingCell.bind(this));
+    //this.mapEachCell(this.killTrailingCell.bind(this));
   }
-
-  killOldCells(cell: any) {
-    if (cell.age > 0) {
-      return { ...cell};
-    } else {
-      return this.emptyCell(cell);
-    }
-  }
-
+  
   emptyCell(cell : any) {
     return {...cell,
-      body: {},
+      body: {color: "black"},
       operations: []};
-  }
-
-
-
-  generateSuccessors(cell: any) {
-    return cell.nextColor === 'green'
-      ? { ...cell, isOn: true}
-      : { ...cell};
-  }
-
-  setData(side: number) {
-    let data = [];
-    for (let i = 0; i < side * side; i++) {
-      data.push(this.getDefaultOffCell());
     }
-    return data;
-  }
-
-  getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+    
+    
+    setData(side: number) {
+      let data = [];
+      for (let i = 0; i < side * side; i++) {
+        data.push(this.getDefaultOffCell());
+      }
+      return data;
     }
-    return color;
-  }
-
-  randomNumber(min: number, max: number, round: boolean = true) {
-    let randomNumber = Math.random() * (max - min) + min;
-    return round ? Math.floor(randomNumber) : randomNumber;
-  }
-
-  getXY(i: number, a: any) {
-    let side = Math.sqrt(a.length);
-    let x = i % side;
-    let y = Math.floor(i / side);
-    return { x: x, y: y };
-  }
-  getTranslateString(x: number) {
-    let result =
+    
+    getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+    
+    randomNumber(min: number, max: number, round: boolean = true) {
+      let randomNumber = Math.random() * (max - min) + min;
+      return round ? Math.floor(randomNumber) : randomNumber;
+    }
+    
+    getXY(i: number, a: any) {
+      let side = Math.sqrt(a.length);
+      let x = i % side;
+      let y = Math.floor(i / side);
+      return { x: x, y: y };
+    }
+    getTranslateString(x: number) {
+      let result =
       'translate(' +
       this.getXY(x, this.data).x * this.squareSide +
       ',' +
       this.getXY(x, this.data).y * this.squareSide +
       ')';
-    return result;
-  }
-
-  linkSquares() {
-    let downLimit = this.data.length - this.sideLength;
-    let upLimit = this.sideLength;
-    this.data = this.data.map((d: any, i: number) => {
-      let upIndex = i - this.sideLength;
-      let downIndex = i + this.sideLength;
-      let result = { ...d };
-      if (i < downLimit) {
-        if (i < upLimit) {
-          result.down = downIndex;
+      return result;
+    }
+    
+    linkSquares() {
+      let downLimit = this.data.length - this.sideLength;
+      let upLimit = this.sideLength;
+      this.data = this.data.map((d: any, i: number) => {
+        let upIndex = i - this.sideLength;
+        let downIndex = i + this.sideLength;
+        let result = { ...d };
+        if (i < downLimit) {
+          if (i < upLimit) {
+            result.down = downIndex;
+          } else {
+            result.up = upIndex;
+            result.down = downIndex;
+          }
         } else {
           result.up = upIndex;
-          result.down = downIndex;
         }
-      } else {
-        result.up = upIndex;
-      }
-      return result;
-    });
-  }
-
-  updateNextAges(cellUp: any, cell: any) {
-    if (cellUp.age > 0) {
+        return result;
+      });
+    }
+    
+    updateNextAges(cellUp: any, cell: any) {
+      if (cellUp.age > 0 && cell.age === 0) {
         cell.nextAge = cellUp.age + 1;
-        cell.new = true;
       }
-    return cell;
-  }
-
-  updateAges(cell: any) {
-    if (cell.new) {
-        cell.age = cell.nextAge;
-        cell.new = false;
+      else{}
+      return cell;
     }
-    if(!cell.new){
-      cell.nextAge -= 1;
+    
+    updateAges(cell: any) {
+      if (cell.age === 0) {
+      cell.age = cell.nextAge;
+      }
+      return cell;
     }
-    return cell;
-  }
-
+  
+    killOldCells(cell: any) {
+      if (cell.age > 0) {
+        return { ...cell, nextAge : cell.nextAge - 1};
+      } else {
+        return this.emptyCell(cell);
+      }
+    }
+    
 
   killTrailingCell(cell: any) {
     if(cell.nextAge > 0) {
