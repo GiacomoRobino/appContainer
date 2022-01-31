@@ -42,10 +42,10 @@ export class JsonToGraphComponent implements OnInit {
   public circles: any;
   public squareSide: number = 0;
   public data: any;
-  public frameCount = 0;
-
-  public sideLength: number = 25;
-  public ageLimit = 3;
+  
+  public timeFrame = 1520;
+  public sideLength: number = 15;
+  public ageLimit = 1;
 
   ngOnInit(): void {
     this.svg = select('.fill-app');
@@ -60,7 +60,7 @@ export class JsonToGraphComponent implements OnInit {
 
 
   randomColorStartingCell(cell: any) {
-    if (Math.random() > 0.9995 && !cell.isOn) {
+    if (Math.random() > 0.9995 && cell.age === 0) {
       return {
         ...cell,
         isOn: true,
@@ -72,45 +72,26 @@ export class JsonToGraphComponent implements OnInit {
     }
   }
 
-  killOldCells(cell: any) {
-    if (cell.age > 0) {
-      return { ...cell, age: cell.age - 1 };
-    } else {
-      return { ...cell, isBugged: false || cell.isStartingBug, isOn: false, age: 0 };
-    }
-  }
-
   getDefaultOffCell() {
     return {
-      nextColor: 'black',
+      body: {},
+      color: 'black',
       up: -1,
       down: -1,
-      isOn: false,
       age: 0,
-      isBugged: false,
-      startingBug: false,
+      nextAge:0,
+      operations: []
     };
   }
+
   render() {
-    let transitionTime = 100;
     let groups = this.svg.selectAll('g');
     let g = groups.data(this.data);
     let en = g
       .enter()
       .append('g')
       .attr('transform', (d: any, i: number) => this.getTranslateString(i));
-    /*
-    let rectangles = en.append('rect')
-      .merge(groups.select('rect'))
-      .attr('shape-rendering', 'crispEdges')
-      .attr('height', (d: any) => this.squareSide)
-      .attr('width', (d: any) => this.squareSide)
-    rectangles
-      .transition()
-      .duration((d :any) => 500 - (d.age ))
-      .ease(easeCubicInOut)
-      .attr('fill', (d: any) => d.color)
-*/
+
     let rectangles = en
       .append('rect')
       .merge(groups.select('rect'))
@@ -121,32 +102,61 @@ export class JsonToGraphComponent implements OnInit {
     
       rectangles.attr('style', (d: any) => d.startingBug === true? "outline: solid red;" : '');
       rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
-      this.bugOnSelect(selectedItem);
+ //     this.bugOnSelect(selectedItem);
 });
+
     en.append('text')
       .merge(groups.select('text'))
-      .filter((d: any) => d.age > 0)
-      .text((d: any) => (d.age))
-      .attr('fill', (d: any) =>  d.isBugged? 'red' : 'green')
-      .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
+      .filter((d: any) => d.age > 0 || d.nextAge > 0)
+      .text((d: any) => (d.age + "-" + d.nextAge))
+      .attr('fill', (d: any) =>  "white")
+      //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
       //.attr('fill-opacity', (d: any) => (3.0 / Math.abs((this.ageLimit * 4) - d.age)))
       .attr('font-size', '8px')
       .attr('y', "10px")
       .attr('x', "7px")
       ;
-    if (this.frameCount % 1 === 0) {
+      
+      this.mapEachCell(this.randomColorStartingCell.bind(this));
+
+      this.populateCells();
+
+      /*
       this.lookUpCell(this.matrixUp.bind(this));
       this.mapEachCell(this.generateSuccessors);
       this.mapEachCell(this.killOldCells.bind(this));
       this.mapEachCell(this.randomColorStartingCell.bind(this));
-    }
-    timeout(() => this.render(), 150);
+      */
+    
+    timeout(() => this.render(), this.timeFrame);
   }
 
-  bugOnSelect(cell: any) {
-    this.data[cell.up + this.sideLength].isBugged = true;
-    this.data[cell.up + this.sideLength].startingBug = true;
+  populateCells() {
+    //kill old cells
+    this.mapEachCell(this.killOldCells.bind(this));
+    //update all cells
+    this.lookUpCell(this.updateNextAges.bind(this));
+    this.mapEachCell(this.updateAges.bind(this));
+
+    //age all cells
+    this.mapEachCell(this.killTrailingCell.bind(this));
   }
+
+  killOldCells(cell: any) {
+    if (cell.age > 0) {
+      return { ...cell};
+    } else {
+      return this.emptyCell(cell);
+    }
+  }
+
+  emptyCell(cell : any) {
+    return {...cell,
+      body: {},
+      operations: []};
+  }
+
+
 
   generateSuccessors(cell: any) {
     return cell.nextColor === 'green'
@@ -213,29 +223,37 @@ export class JsonToGraphComponent implements OnInit {
     });
   }
 
-  matrixUp(cellUp: any, cell: any) {
-    if (cellUp.isOn) {
-      cell.isBugged = cell.isBugged || cellUp.isBugged || cell.startingBug;
-      if(cell.down >= 0){
-      if(!this.data[cell.down].isOn){
-        cell.nextColor = 'green';
-        cell.age = cellUp.age + 3;
+  updateNextAges(cellUp: any, cell: any) {
+    if (cellUp.age > 0) {
+        cell.nextAge = cellUp.age + 1;
       }
-    }
-    else{
-      cell.nextColor = 'green';
-      cell.age = cellUp.age + 3;
-    }
-    }
-    else{
-      cell.isBugged = false || cell.isStartBug;
-    }
+    return cell;
   }
+
+  updateAges(cell: any) {
+        cell.age = cell.nextAge;
+        return cell;
+  }
+
+
+  killTrailingCell(cell: any) {
+    if(cell.nextAge > 0) {
+      cell.nextAge -= 1;
+    }
+    return cell;
+  }
+
 
   lookUpCell(callback: any) {
     this.data
       .filter((cell: any) => cell.up >= 0)
       .forEach((cellUp: any) => callback(this.data[cellUp.up], cellUp));
+  }
+
+  lookDownCell(callback: any) {
+    this.data
+      .filter((cell: any) => cell.down >= 0)
+      .forEach((cellDown: any) => callback(this.data[cellDown.down], cellDown));
   }
 
   mapUpCell(f: any) {
@@ -258,27 +276,4 @@ export class JsonToGraphComponent implements OnInit {
 }
 
 
-/*
-  colorUp(cell: any) {
-    cell.color = 'yellow';
-  }
 
-  colorDown(cell: any) {
-    cell.color = 'green';
-  }
-
-  
-  colorDownRow(cell: any) {
-    if (cell.down >= 0) {
-      this.data[cell.down].color = 'yellow';
-    }
-  }
-
-  colorUpRow(cell: any) {
-    if (cell.up >= 0) {
-      console.log(cell.up);
-      this.data[cell.up].color = 'purple';
-    }
-  }
-
-*/
