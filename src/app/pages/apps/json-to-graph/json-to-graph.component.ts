@@ -42,6 +42,9 @@ export class JsonToGraphComponent implements OnInit {
   public circles: any;
   public squareSide: number = 0;
   public data: any;
+
+
+  public words = ["dog", "horse", "angel", "elephant", "mouse"];
   
   public timeFrame = 120;
   public sideLength: number = 25;
@@ -59,7 +62,7 @@ export class JsonToGraphComponent implements OnInit {
   }
 
 
-  randomColorStartingCell(cell: any) {
+  randomColorStartingCell_(cell: any) {
     if (Math.random() > 0.9994 && cell.age === 0) {
       let randomNumber = this.randomNumber(1, this.ageLimit, true)
       return {
@@ -67,6 +70,22 @@ export class JsonToGraphComponent implements OnInit {
         age: randomNumber,
         nextAge: randomNumber,
       };
+    } else {
+      return cell;
+    }
+  }
+
+  randomColorStartingCell(cell: any) {
+    if (Math.random() > 0.9994 && cell.age === 0) {
+      let randomWord = this.words[this.randomNumber(0, this.words.length, true)]
+      let startingCount = randomWord.length;
+      let result =  {
+        ...cell,
+        age: startingCount,
+        nextAge: startingCount,
+        body: {...cell.body, word: randomWord},
+      };
+      return result;
     } else {
       return cell;
     }
@@ -81,6 +100,46 @@ export class JsonToGraphComponent implements OnInit {
       nextAge:0,
       operations: []
     };
+  }
+
+  render_() {
+    let groups = this.svg.selectAll('g');
+    let g = groups.data(this.data);
+    let en = g
+      .enter()
+      .append('g')
+      .attr('transform', (d: any, i: number) => this.getTranslateString(i));
+
+    let rectangles = en
+      .append('rect')
+      .merge(groups.select('rect'))
+      .attr('shape-rendering', 'crispEdges')
+      .attr('height', (d: any) => this.squareSide)
+      .attr('width', (d: any) => this.squareSide);
+
+    
+      rectangles.attr('style', (d: any) => d.body.color);
+      rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
+      this.multOnSelect(selectedItem);
+});
+
+    en.append('text')
+      .merge(groups.select('text'))
+      .text((d: any) => d.age)
+      .attr('fill', (d: any) =>  d.body.color)
+      //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
+      .attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
+      .attr('font-size', '8px')
+      .attr('y', "10px")
+      .attr('x', "7px")
+      ;
+      
+      this.mapEachCell(this.randomColorStartingCell.bind(this));
+
+      this.populateCells();
+
+    
+    timeout(() => this.render(), this.timeFrame);
   }
 
   render() {
@@ -106,11 +165,10 @@ export class JsonToGraphComponent implements OnInit {
 
     en.append('text')
       .merge(groups.select('text'))
-      //.filter((d: any) => (d.age > 0 || d.nextAge > 0))
-      .text((d: any) => (d.age))
-      .attr('fill', (d: any) =>  d.body.color)
-      //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
-      .attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
+      .text((d: any) => (d.body.word && (d.age > 0) ? d.body.word.charAt(d.age - d.body.word.length) : ""))
+      .attr('fill', (d: any) =>  d.body.color)      
+      .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
+      //.attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
       .attr('font-size', '8px')
       .attr('y', "10px")
       .attr('x', "7px")
@@ -123,7 +181,6 @@ export class JsonToGraphComponent implements OnInit {
     
     timeout(() => this.render(), this.timeFrame);
   }
-
   populateCells() {
     //update all cells
     this.lookUpCell(this.updateNextAges.bind(this));
@@ -202,17 +259,17 @@ export class JsonToGraphComponent implements OnInit {
         cell.body.color = "green";
         cell.nextAge -= 1;
         if(cell.nextAge <= 0) {
-          
           cell.body.color = "black";
           cell.age = 0;
         }
       }
-      
+        
       else if (cellUp){
-      if(cellUp.age > 0) {
-        cell.body.color = "white";
-        cell.nextAge = cellUp.age + 1;
-      }
+        if(cellUp.age > 0) {
+          cell.body.color = "white";
+          cell.nextAge = cellUp.age + 1;
+          cell.body.word = cellUp.body.word;
+        }
     }
     }
     

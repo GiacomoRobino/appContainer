@@ -13,6 +13,7 @@ import { CircularCalendarComponent } from './pages/apps/circular-calendar/circul
 import { ParticleNetworkComponent } from './pages/apps/particle-network/particle-network.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { MarkupEditorComponent } from './pages/apps/markup-editor/markup-editor.component';
+import { MatrixComponent } from './pages/apps/matrix/matrix.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MarkupEditorComponent } from './pages/apps/markup-editor/markup-editor.
     JsonToGraphComponent,
     CircularCalendarComponent,
     ParticleNetworkComponent,
-    MarkupEditorComponent
+    MarkupEditorComponent,
+    MatrixComponent
   ],
   imports: [
     BrowserModule,
