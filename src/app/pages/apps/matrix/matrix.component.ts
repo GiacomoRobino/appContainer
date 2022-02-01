@@ -1,19 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/template';
-import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
-import { setClassMetadata } from '@angular/core/src/r3_symbols';
-import {
-  easeBounceInOut,
-  easeCubic,
-  easeCubicIn,
-  easeCubicInOut,
-  easeCubicOut,
-  easeElasticIn,
-  easeQuadInOut,
-  easeSinInOut,
-  select,
-  timeout,
-} from 'd3';
+import {select, timeout} from 'd3';
+import { NgModel , NgForm } from '@angular/forms';
 @Component({
   selector: 'app-matrix',
   templateUrl: './matrix.component.html',
@@ -42,10 +29,11 @@ export class MatrixComponent implements OnInit, AfterViewInit{
     public data: any;
   
   
-    public words = ["dog", "horse", "angel", "elephant", "mouse"];
+    public words = [""];
+    public myText = "";
     
-    public timeFrame = 120;
-    public sideLength: number = 25;
+    public timeFrame = 20;
+    public sideLength: number = 20;
     public ageLimit = 10;
 
   
@@ -59,42 +47,32 @@ export class MatrixComponent implements OnInit, AfterViewInit{
     
     ngAfterViewInit() {
       let height = this.matrixSurface.nativeElement.clientHeight;
-      this.squareSide = height / this.sideLength; //parseInt(h) / this.sideLength;
+      this.squareSide = height / this.sideLength;
       this.data = this.setData(this.sideLength);
       this.linkSquares();
       this.mapEachCell(this.randomColorStartingCell.bind(this));
       this.render();
     }
-    
+
   
-  
-    randomColorStartingCell_(cell: any) {
-      if (Math.random() > 0.9994 && cell.age === 0) {
-        let randomNumber = this.randomNumber(1, this.ageLimit, true)
-        return {
-          ...cell,
-          age: randomNumber,
-          nextAge: randomNumber,
-        };
+    randomColorStartingCell(cell: any) {
+      if (Math.random() > 0.999994 && cell.age === 0) {
+        return this.getRandomCell(cell);
       } else {
         return cell;
       }
     }
-  
-    randomColorStartingCell(cell: any) {
-      if (Math.random() > 0.9994 && cell.age === 0) {
-        let randomWord = this.words[this.randomNumber(0, this.words.length, true)]
-        let startingCount = randomWord.length;
-        let result =  {
-          ...cell,
-          age: startingCount,
-          nextAge: startingCount,
-          body: {...cell.body, word: randomWord},
-        };
-        return result;
-      } else {
-        return cell;
-      }
+
+    getRandomCell(cell: any){
+      let randomWord = this.words[this.randomNumber(0, this.words.length, true)]
+      let startingCount = randomWord.length;
+      let result =  {
+        ...cell,
+        age: startingCount,
+        nextAge: startingCount,
+        body: {...cell.body, word: randomWord},
+      };
+      return result;
     }
   
     getDefaultOffCell() {
@@ -108,47 +86,8 @@ export class MatrixComponent implements OnInit, AfterViewInit{
       };
     }
   
-    render_() {
-      let groups = this.svg.selectAll('g');
-      let g = groups.data(this.data);
-      let en = g
-        .enter()
-        .append('g')
-        .attr('transform', (d: any, i: number) => this.getTranslateString(i));
-  
-      let rectangles = en
-        .append('rect')
-        .merge(groups.select('rect'))
-        .attr('shape-rendering', 'crispEdges')
-        .attr('height', (d: any) => this.squareSide)
-        .attr('width', (d: any) => this.squareSide);
-  
-      
-        rectangles.attr('style', (d: any) => d.body.color);
-        rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
-        this.multOnSelect(selectedItem);
-  });
-  
-      en.append('text')
-        .merge(groups.select('text'))
-        .text((d: any) => d.age)
-        .attr('fill', (d: any) =>  d.body.color)
-        //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
-        .attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
-        .attr('font-size', '16px')
-        .attr('y', "10px")
-        .attr('x', "7px")
-        ;
-        
-        this.mapEachCell(this.randomColorStartingCell.bind(this));
-  
-        this.populateCells();
-  
-      
-      timeout(() => this.render(), this.timeFrame);
-    }
-  
     render() {
+      //console.table(this.data);
       let groups = this.svg.selectAll('g');
       let g = groups.data(this.data);
       let en = g
@@ -168,6 +107,12 @@ export class MatrixComponent implements OnInit, AfterViewInit{
         rectangles.on("click", (clickEvent: any, selectedItem: any)=>{
         this.multOnSelect(selectedItem);
   });
+  
+  rectangles.on("mouseover", (hoverEvent: any, selectedItem: any)=>{
+    console.log(selectedItem);
+    
+    this.data[selectedItem.down] = this.getRandomCell(this.data[selectedItem.down]);
+})
   
       en.append('text')
         .merge(groups.select('text'))
@@ -258,6 +203,9 @@ export class MatrixComponent implements OnInit, AfterViewInit{
       multOnSelect(selectedItem: any) {
         selectedItem.operations.push = (x: any) => x * 3;
         selectedItem.body.color = "red";
+      }
+      onEnter(word:string){
+        this.words.push(word)
       }
       
       updateNextAges(cellUp: any, cell: any) {
