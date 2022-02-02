@@ -27,12 +27,13 @@ export class MatrixComponent implements OnInit, AfterViewInit{
     public circles: any;
     public squareSide: number = 0;
     public data: any;
+    public currentCellIndex: number = -1;
   
   
     public words = [""];
     public myText = "";
     
-    public timeFrame = 20;
+    public timeFrame = 120;
     public sideLength: number = 20;
     public ageLimit = 10;
 
@@ -88,6 +89,9 @@ export class MatrixComponent implements OnInit, AfterViewInit{
   
     render() {
       //console.table(this.data);
+      if(this.currentCellIndex >= 0){
+        this.populateCell(this.data[this.currentCellIndex]);
+      }
       let groups = this.svg.selectAll('g');
       let g = groups.data(this.data);
       let en = g
@@ -109,9 +113,9 @@ export class MatrixComponent implements OnInit, AfterViewInit{
   });
   
   rectangles.on("mouseover", (hoverEvent: any, selectedItem: any)=>{
-    console.log(selectedItem);
-    
-    this.data[selectedItem.down] = this.getRandomCell(this.data[selectedItem.down]);
+    let downIndex = selectedItem.down;
+    this.currentCellIndex = downIndex;
+    this.populateCell(this.data[downIndex]);
 })
   
       en.append('text')
@@ -119,7 +123,7 @@ export class MatrixComponent implements OnInit, AfterViewInit{
         .text((d: any) => (d.body.word && (d.age > 0) ? d.body.word.charAt(d.age - d.body.word.length) : ""))
         .attr('fill', (d: any) =>  d.body.color)      
         .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
-        //.attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
+        .attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
         .attr('font-size', '8px')
         .attr('y', "10px")
         .attr('x', "7px")
@@ -128,10 +132,15 @@ export class MatrixComponent implements OnInit, AfterViewInit{
         this.mapEachCell(this.randomColorStartingCell.bind(this));
   
         this.populateCells();
-  
-      
+    
       timeout(() => this.render(), this.timeFrame);
     }
+
+    populateCell(cell : any){
+      let cellIndex = this.data[cell.up].down;
+      this.data[cellIndex] = this.getRandomCell(this.data[cellIndex]);
+    }
+
     populateCells() {
       //update all cells
       this.lookUpCell(this.updateNextAges.bind(this));
@@ -140,7 +149,7 @@ export class MatrixComponent implements OnInit, AfterViewInit{
     
   
       
-      
+    
       setData(side: number) {
         let data = [];
         for (let i = 0; i < side * side; i++) {
