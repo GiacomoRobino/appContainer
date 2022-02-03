@@ -10,6 +10,7 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   public svg: any;
   public g: any;
   public currentList = 0;
+  public circleAttributes = { innerRadius: 70, outerRadius: 130 };
   public details: Array<any[]> = [
     [
       { grade: 'orange', number: 8 },
@@ -33,7 +34,6 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.svg = select('.fill-app');
     this.svg.attr('shaper-rendering', 'crispEdges');
-    //TODO: ottenere altezza svg
   }
 
   ngAfterViewInit() {
@@ -46,8 +46,8 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
       })(this.details[this.currentList]);
 
     let segments = arc()
-      .innerRadius(100)
-      .outerRadius(130)
+      .innerRadius(this.circleAttributes.innerRadius)
+      .outerRadius(this.circleAttributes.outerRadius)
       .padAngle(0.05)
       .padRadius(50);
 
@@ -55,6 +55,35 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
     let sections = this.g.selectAll('path').data(data);
     sections.enter().append('path');
     this.render();
+    this.initCentralButtons();
+  }
+
+  initCentralButtons(){
+    let clickClockWise: any = arc()
+    .outerRadius(this.circleAttributes.innerRadius - 5)
+    .innerRadius(0)
+    .startAngle(-Math.PI / 2.5)
+    .endAngle(Math.PI / 1.5);
+
+  this.svg
+    .append('path')
+    .attr('transform', 'translate(250,250)')
+    .attr('d', clickClockWise()).attr("fill", "black")
+    .on('click', (clickEvent: any, selectedItem: any) => this.rotateClockWise())
+    ;
+  
+    
+  let clickCounterClockWise: any = arc()
+  .outerRadius(this.circleAttributes.innerRadius - 5)
+  .innerRadius(0)
+  .startAngle(Math.PI / 1.5)
+  .endAngle( 1.66 * Math.PI);
+
+this.svg
+  .append('path')
+  .attr('transform', 'translate(250,250)')
+  .attr('d', clickCounterClockWise()).attr("fill", "red")
+  .on('click', (clickEvent: any, selectedItem: any) => this.rotateCounterClockWise())
   }
 
   render(angleOffset: number = 1) {
@@ -67,8 +96,8 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
       .startAngle(angleOffset)
       .endAngle(2 * Math.PI + angleOffset)(this.details[this.currentList]);
     let segments = arc()
-      .innerRadius(70)
-      .outerRadius(130)
+      .innerRadius(this.circleAttributes.innerRadius)
+      .outerRadius(this.circleAttributes.outerRadius)
       .padAngle(0.05)
       .padRadius(50);
     let selection = this.g
@@ -101,7 +130,8 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
       sizesSum += i.number;
     }
     let unit = (2 * Math.PI) / sizesSum;
-    let offset = Math.PI / 2 - unit * (this.details[this.currentList][0].number / 2);
+    let offset =
+      Math.PI / 2 - unit * (this.details[this.currentList][0].number / 2);
     return offset;
   }
 
@@ -110,19 +140,26 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
     this.render();
   }
 
-  changeCurrentList(){
-    this.currentList === 0? (this.currentList = 1) : (this.currentList = 0);
+  changeCurrentList() {
+    this.currentList === 0 ? (this.currentList = 1) : (this.currentList = 0);
     this.render();
   }
 
-  rotateClockWise(){
-    console.log(this.details[this.currentList]);
+  rotateCounterClockWise() {
     let middleArray = [...this.details[this.currentList]];
     middleArray.shift();
     let shiftedArray = [...middleArray, this.details[this.currentList][0]];
     middleArray.shift();
     middleArray.pop();
     this.details[this.currentList] = shiftedArray;
-    this.render()
+    this.render();
+  }
+
+  rotateClockWise() {
+    let middleArray = [...this.details[this.currentList]];
+    let popped = middleArray.pop();
+    let shiftedArray = [popped, ...middleArray];
+    this.details[this.currentList] = shiftedArray;
+    this.render();
   }
 }
