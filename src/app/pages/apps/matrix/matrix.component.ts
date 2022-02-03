@@ -120,7 +120,7 @@ export class MatrixComponent implements OnInit, AfterViewInit{
         .merge(groups.select('text'))
         .text((d: any) => (d.body.word && (d.age > 0) ? d.body.word.charAt(d.age - d.body.word.length) : ""))
         .attr('fill', (d: any) =>  d.body.color)      
-        .attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
+        //.attr('fill-opacity', (d: any) => 1.0 - (1.0 / d.age) * 3)
         .attr('fill-opacity', (d: any) => (3.0 / Math.abs(this.ageLimit - d.age)))
         .attr('font-size', '8px')
         .attr('y', "10px")
