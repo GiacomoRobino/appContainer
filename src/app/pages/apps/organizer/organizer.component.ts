@@ -58,6 +58,7 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   }
 
   render(angleOffset: number = 1) {
+    angleOffset = this.getStartingAngle();
     let data = pie()
       .sort(null)
       .value(function (d: any) {
@@ -91,7 +92,7 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
           (item: any) => item.grade !== selectedItem.data.grade
         ),
       ];
-      this.render(this.getStartingAngle());
+      this.render();
     });
   }
 
