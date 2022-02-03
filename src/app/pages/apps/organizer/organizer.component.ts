@@ -78,10 +78,9 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
 
     selection.enter().append('path');
     let paths = this.g.selectAll('path');
-    paths.transition().duration(300).attr('d', segments);
+    paths.transition().duration(200).attr('d', segments);
 
     this.g.selectAll('path').attr('fill', (d: any) => {
-      console.log(d);
       return d.data.grade;
     });
 
@@ -114,5 +113,16 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   changeCurrentList(){
     this.currentList === 0? (this.currentList = 1) : (this.currentList = 0);
     this.render();
+  }
+
+  rotateClockWise(){
+    console.log(this.details[this.currentList]);
+    let middleArray = [...this.details[this.currentList]];
+    middleArray.shift();
+    let shiftedArray = [...middleArray, this.details[this.currentList][0]];
+    middleArray.shift();
+    middleArray.pop();
+    this.details[this.currentList] = shiftedArray;
+    this.render()
   }
 }
