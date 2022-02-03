@@ -8,6 +8,7 @@ import {select, arc, pie, timeout} from 'd3';
 })
 export class OrganizerComponent implements OnInit, AfterViewInit {
   public svg: any;
+  public g : any;
   public details: any[] = [{grade: "A+", number: 8},
   {grade: "B", number: 8},
   {grade: "C", number: 18},
@@ -32,27 +33,33 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
     let data = pie().sort(null).value(function (d:any) {return d.number;})(this.details);
     let segments = arc().innerRadius(100).outerRadius(130).padAngle(0.05).padRadius(50);
 
-    let g = this.svg.append("g").attr("transform", "translate(250,250)");
-    let sections = g.selectAll("path").data(data);
-    sections.exit().remove();
+    this.g = this.svg.append("g").attr("transform", "translate(250,250)");
+    let sections = this.g.selectAll("path").data(data);
     sections
       .enter()
-        .append("path").attr("d", segments)
-    this.render(g);
+        .append("path")
+    this.render();
     
   }
   
-  render(g: any){
+  render(){
     let data = pie().sort(null).value(function (d:any) {return d.number;})(this.details);
     let segments = arc().innerRadius(100).outerRadius(130).padAngle(0.05).padRadius(50);
 
-    let sections = g.selectAll("path").data(data)
-    .transition().duration(300)
+    let selection = this.g.selectAll("path").data(data);
+    selection
+    .enter()
+      .append("path")
+
+
+      this.g.selectAll("path").transition().duration(300)
     .attr("d", segments);
     
     
-    this.details[0].number = this.details[0].number + 2;
-    timeout(() => this.render(g), 1000); 
+    }
+    addActivity(){
+      this.details.push({grade: "xxx", number: 2});
+      this.render()
     }
 }
 
