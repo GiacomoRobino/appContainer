@@ -9,12 +9,12 @@ import {select, arc, pie} from 'd3';
 export class OrganizerComponent implements OnInit, AfterViewInit {
   public svg: any;
   public g : any;
-  public details: any[] = [{grade: "A+", number: 8},
-  {grade: "B", number: 8},
-  {grade: "C", number: 18},
-  {grade: "D", number: 20},
-  {grade: "E", number: 12},
-  {grade: "F", number: 30}
+  public details: any[] = [{grade: "orange", number: 8},
+  {grade: "green", number: 8},
+  {grade: "red", number: 18},
+  {grade: "blue", number: 20},
+  {grade: "yellow", number: 12},
+  {grade: "black", number: 30}
 ]
   
   @ViewChild('organizerSurface') organizerSurface: any;
@@ -57,17 +57,21 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
     selection
     .enter()
       .append("path")
-    let paths = this.g.selectAll("path");
+    let paths = this.g.selectAll("path")
+    ;
 
     paths.transition().duration(300)
     .attr("d", segments)
+    
+    this.g.selectAll("path").attr("fill", (d:any)=>{
+      console.log(d);
+      return d.data.grade;}
+      );
 
     paths.on("click", (clickEvent: any, selectedItem: any)=>{
       
-      console.log(selectedItem,this.details);
       this.details = [selectedItem.data,
         ... this.details.filter((item: any) => item.grade !== selectedItem.data.grade)];
-      console.log(this.details);
       this.render(this.getStartingAngle());
     });
   ;
@@ -84,7 +88,7 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   }
 
     addActivity(){
-      this.details.push({grade: "xxx", number: 2});
+      this.details.push({grade: "grey", number: 2});
       this.render()
     }
 }
