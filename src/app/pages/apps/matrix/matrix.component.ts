@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {select, timeout} from 'd3';
-import { NgModel , NgForm } from '@angular/forms';
 @Component({
   selector: 'app-matrix',
   templateUrl: './matrix.component.html',
@@ -43,7 +42,6 @@ export class MatrixComponent implements OnInit, AfterViewInit{
     ngOnInit(): void {
       this.svg = select('.fill-app');
       this.svg.attr('shaper-rendering', 'crispEdges');
-      //TODO: ottenere altezza svg
     }
     
     ngAfterViewInit() {

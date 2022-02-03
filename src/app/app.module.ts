@@ -14,6 +14,7 @@ import { ParticleNetworkComponent } from './pages/apps/particle-network/particle
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { MarkupEditorComponent } from './pages/apps/markup-editor/markup-editor.component';
 import { MatrixComponent } from './pages/apps/matrix/matrix.component';
+import { OrganizerComponent } from './pages/apps/organizer/organizer.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { MatrixComponent } from './pages/apps/matrix/matrix.component';
     CircularCalendarComponent,
     ParticleNetworkComponent,
     MarkupEditorComponent,
-    MatrixComponent
+    MatrixComponent,
+    OrganizerComponent
   ],
   imports: [
     BrowserModule,
