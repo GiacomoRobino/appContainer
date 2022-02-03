@@ -52,7 +52,7 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
     .padAngle(0.05)
     .padRadius(50)
       ;
-    let selection = this.g.selectAll("path").data(data);
+    let selection = this.g.selectAll("path").data(data,(d:any) => d.data.grade);
 
     selection
     .enter()
