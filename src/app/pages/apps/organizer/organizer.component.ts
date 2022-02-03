@@ -50,10 +50,21 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
     selection
     .enter()
       .append("path")
+    let paths = this.g.selectAll("path");
 
+    paths.transition().duration(300)
+    .attr("d", segments)
 
-      this.g.selectAll("path").transition().duration(300)
-    .attr("d", segments);
+    paths.on("click", (clickEvent: any, selectedItem: any)=>{
+      
+      console.log(selectedItem,this.details);
+      this.details = [selectedItem.data,
+        ... this.details.filter((item: any) => item.grade !== selectedItem.data.grade)];
+      console.log(this.details);
+      this.render();
+});
+
+    ;
     
     
     }
