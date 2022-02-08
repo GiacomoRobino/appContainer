@@ -30,9 +30,9 @@ public endingPointY : number;
     //this.createLineAnimate();
   }
 
-  createPath_(x : number, y : number, timeStep : number = 10, timeTrendDecreasing: boolean = true) {
+  createPath(x : number, y : number, timeStep : number = 1, timeTrendDecreasing: boolean = true) {
     let lowerBound = 2;
-    let higherBound = 100;
+    let higherBound = 1000;
     this.c.beginPath();
     this.c.moveTo(x, y);
     if (timeStep > lowerBound && timeStep < higherBound) {
@@ -55,10 +55,13 @@ public endingPointY : number;
         this.c.lineTo(x, y);
         let color = "rgb(" + (y).toString() + "," + (x).toString() + "," + (y % 10).toString() + ")";
         this.c.strokeStyle = color;
+        this.c.lineWidth = 10;
         this.c.stroke();
         this.createPath(x, y, timeStep, timeTrendDecreasing);
       }, timeStep);
   }
+  /*
+  //create a path using a list of points
   createPath(x : number, y : number, timeStep : number = 10, timeTrendDecreasing: boolean = true) {
     let lowerBound = 2;
     let higherBound = 100;
@@ -88,7 +91,7 @@ public endingPointY : number;
       }, 1000);
   }
 
-
+*/
   getCoordinateOnCanvas(startingPoint: number, boundaries: number, canvasCoordinate: number) {
     let result = startingPoint + this.getRandomInt(-boundaries,boundaries);
     while(result < 0 || result > canvasCoordinate){
