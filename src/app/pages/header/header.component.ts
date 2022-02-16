@@ -27,11 +27,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 setHome(set:boolean){
   let tl = gsap.timeline();
   if(set){
-    tl.to(this.homeButtonElement, {duration: 1, opacity: 1, width: "100%"});
+    tl.to(this.homeButtonElement, {duration: 1, opacity: 1, width: "100%", ease: Power4.easeOut});
   }
   else{
     
-    tl.to(this.homeButtonElement, {duration: 1, opacity: 0, width:"0px"});
+    tl.to(this.homeButtonElement, {duration: 1, opacity: 0, width:"0px", ease: Power4.easeOut});
   }
   }
 }

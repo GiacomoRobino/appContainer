@@ -11,6 +11,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChildren('appButton') appButton :QueryList<any> = new QueryList;
   @ViewChild('appButtonsContainer') appButtonsContainer: any;
   appButtonElementsArray : any;
+  sideEscapePoint = 1700;
+
 
   constructor(private router: Router) { }
 
@@ -21,12 +23,12 @@ export class HomeComponent implements OnInit, AfterViewInit{
     this.appButtonElementsArray = this.appButton.map((nativeElement:any) => nativeElement.nativeElement);
     let tl = gsap.timeline();
     this.appButtonElementsArray.forEach((element:any, index:number) => {
-    tl.from(element, {duration: 0.2, x: -1000})});
+    tl.from(element, {duration: 0.2, x: -this.sideEscapePoint})});
   }
 
   exitAnimation(fadeTime:number): void {
     let tl = gsap.timeline();
-      tl.to(this.appButtonsContainer.nativeElement, {duration: fadeTime / 1000, x: -1000, ease: Power4.easeOut});
+      tl.to(this.appButtonsContainer.nativeElement, {duration: fadeTime / 1000, x: -this.sideEscapePoint, ease: Power4.easeIn});
   }
 
   goToApp(appName: string) {
