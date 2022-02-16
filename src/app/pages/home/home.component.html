@@ -1,10 +1,10 @@
 <app-header [home]="true"></app-header>
-<div class="container">
-    <button class="app-button" (click)="goToApp('organizer')">Organizer</button>
-    <button class="app-button" (click)="goToApp('matrix')">Matrix</button>
-    <button class="app-button" (click)="goToApp('particleNetwork')">Particle Network</button>
-    <button class="app-button" (click)="goToApp('markupEditor')">Markup editor</button>
-    <button class="app-button" (click)="goToApp('hourglass')">Hourglass</button>
+<div #appButtonsContainer class="container">
+    <button #appButton class="app-button" (click)="goToApp('organizer')">Organizer</button>
+    <button #appButton class="app-button" (click)="goToApp('matrix')">Matrix</button>
+    <button #appButton class="app-button" (click)="goToApp('particleNetwork')">Particle Network</button>
+    <!-- <button class="app-button" (click)="goToApp('markupEditor')">Markup editor</button> -->
+    <button #appButton class="app-button" (click)="goToApp('hourglass')">Rainbown Path</button>
 <!--
     <button class="app-button" (click)="goToApp('jsonToGraph')">Json to graph</button>
     <button class="app-button" (click)="goToApp('circularCalendar')">Ciruclar calendar</button>
