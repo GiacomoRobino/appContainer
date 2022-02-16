@@ -10,7 +10,6 @@ import {ElementRef} from '@angular/core';
 export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChildren('appButton') appButton :QueryList<any> = new QueryList;
   @ViewChild('appButtonsContainer') appButtonsContainer: any;
-  @ViewChild('header') header: any;
   appButtonElementsArray : any;
 
   constructor(private router: Router) { }
@@ -34,7 +33,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
     let fadeTIme = 400;
     this.exitAnimation(fadeTIme);
     setTimeout(() => {
-    this.header.addHome();
     this.router.navigate(['apps'], { queryParams: { appName: appName } });
     }, fadeTIme);
   }
