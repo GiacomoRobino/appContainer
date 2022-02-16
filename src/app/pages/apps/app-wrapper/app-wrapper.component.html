@@ -6,7 +6,7 @@
     <div><button class="app-button element-container-style sidebar-button">Youtube</button></div>
     <div><button class="app-button element-container-style sidebar-button">Code on GitHub</button></div>
   </div>
-  <div class="carousel element-container-style">
+  <div #appContainer class="carousel element-container-style">
     <app-organizer class="element-container-style" *ngIf="appName === 'organizer'"></app-organizer>
     <app-matrix class="element-container-style" *ngIf="appName === 'matrix'"></app-matrix>
     <app-particle-network class="element-container-style" *ngIf="appName === 'particleNetwork'"></app-particle-network>
