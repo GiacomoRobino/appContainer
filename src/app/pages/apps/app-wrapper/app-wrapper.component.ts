@@ -9,6 +9,8 @@ import { gsap, Power4 } from 'gsap';
 })
 export class AppWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('appContainer') appContainer: any;
+  @ViewChild('sidebar') sidebar: any;
+
 
   public appName: string = "";
   constructor(private route: ActivatedRoute,
@@ -26,6 +28,7 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     let tl = gsap.timeline();
     tl.from(this.appContainer.nativeElement, {duration: 1, x: +2000, ease: Power4.easeOut});
+    tl.from(this.sidebar.nativeElement, {duration: 1, x: -100, ease: Power4.easeOut}, "-=1");
     
   }
 
