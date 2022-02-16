@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @ViewChild('header') header: any;
   title = 'app-container';
+
+  onActivate(event: any) {
+    this.header.setHome(Object.keys(event.router.rawUrlTree.queryParams).length !== 0);
+  }
 }

@@ -24,9 +24,14 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   this.homeButtonElement = this.homeButton.nativeElement;
 }
 
-addHome(){
+setHome(set:boolean){
   let tl = gsap.timeline();
-    tl.from(this.homeButtonElement, {duration: 2, x: 200});
-    console.log('addHome');
+  if(set){
+    tl.to(this.homeButtonElement, {duration: 1, opacity: 1, width: "100%"});
+  }
+  else{
+    
+    tl.to(this.homeButtonElement, {duration: 1, opacity: 0, width:"0px"});
+  }
   }
 }
