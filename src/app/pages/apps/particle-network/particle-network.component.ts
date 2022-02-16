@@ -8,7 +8,7 @@ import { Options } from '@angular-slider/ngx-slider';
   styleUrls: ['./particle-network.component.scss'],
 })
 export class ParticleNetworkComponent implements OnInit, AfterViewInit {
-  @ViewChild ('cc') cc : any;
+  @ViewChild ('canvas') canvasReference : any;
   public canvas: any;
   public netActivated = true;
   public netType = "poly";
@@ -50,7 +50,7 @@ export class ParticleNetworkComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.canvas =this.cc.nativeElement;
+    this.canvas =this.canvasReference.nativeElement;
     console.log(this.canvas);
     this.canvas.width = window.innerWidth * 0.87;
     this.canvas.height = window.innerHeight * 0.7;
