@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Particle } from './model';
 import { Options } from '@angular-slider/ngx-slider';
 
@@ -7,7 +7,9 @@ import { Options } from '@angular-slider/ngx-slider';
   templateUrl: './particle-network.component.html',
   styleUrls: ['./particle-network.component.scss'],
 })
-export class ParticleNetworkComponent implements OnInit {
+export class ParticleNetworkComponent implements OnInit, AfterViewInit {
+  @ViewChild ('cc') cc : any;
+  public canvas: any;
   public netActivated = true;
   public netType = "poly";
   public renderedFrames = 0;
@@ -15,7 +17,6 @@ export class ParticleNetworkComponent implements OnInit {
   public w: number = 0;
   public loopId: number = 0;
   public id: number = 0;
-  public canvas: any;
   public ctx: any;
   public particles: any[] = [];
   public options = {
@@ -46,8 +47,11 @@ export class ParticleNetworkComponent implements OnInit {
   };
   constructor() {}
 
-  ngOnInit(): void {
-    this.canvas = <HTMLCanvasElement>document.querySelector('canvas');
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.canvas =this.cc.nativeElement;
+    console.log(this.canvas);
     this.canvas.width = window.innerWidth * 0.87;
     this.canvas.height = window.innerHeight * 0.7;
     this.w = this.canvas.width;
