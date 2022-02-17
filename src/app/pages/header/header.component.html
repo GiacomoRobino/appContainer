@@ -1,8 +1,11 @@
 <div class="container">
     <button class="blog-button header-button element-container-style" (click)="activateContactMe()">{{contactMe.text}}</button>
-    <button class="about-button header-button element-container-style">about</button>
+    <button class="about-button header-button element-container-style"(click)="activateAboutMe()">about</button>
     <button #home class="blog-button header-button element-container-style home" (click)="goHome()">home</button>
 </div>
 <div *ngIf="this.contactMe.initialized" #contactMeContainer>
     <app-contact-me></app-contact-me>
+</div>
+<div *ngIf="this.aboutMe.initialized" #aboutMeContainer>
+    <app-about-me></app-about-me>
 </div>

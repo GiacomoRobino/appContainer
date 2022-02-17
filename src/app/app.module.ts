@@ -16,6 +16,7 @@ import { MarkupEditorComponent } from './pages/apps/markup-editor/markup-editor.
 import { MatrixComponent } from './pages/apps/matrix/matrix.component';
 import { OrganizerComponent } from './pages/apps/organizer/organizer.component';
 import { ContactMeComponent } from './pages/header/contact-me/contact-me.component';
+import { AboutMeComponent } from './pages/header/about-me/about-me.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ContactMeComponent } from './pages/header/contact-me/contact-me.compone
     MarkupEditorComponent,
     MatrixComponent,
     OrganizerComponent,
-    ContactMeComponent
+    ContactMeComponent,
+    AboutMeComponent
   ],
   imports: [
     BrowserModule,

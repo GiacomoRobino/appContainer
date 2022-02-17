@@ -9,9 +9,11 @@ import { gsap, Power4 } from 'gsap';
 })
 export class HeaderComponent implements OnInit, AfterViewInit {
   @ViewChild('contactMeContainer') contactMeContainer: any;
+  @ViewChild('aboutMeContainer') aboutMeContainer: any;
   @ViewChild('home') homeButton: any;
   homeButtonElement : any;
   contactMe = {text: "contact me", active: false, initialized: false};
+  aboutMe = {text: "contact me", active: false, initialized: false};
   constructor(private router: Router) { }
 
   ngOnInit(): void {
@@ -35,6 +37,7 @@ setHome(set:boolean){
   }
   }
   activateContactMe(){
+    this.aboutMe.initialized = false;
     this.contactMe.initialized = !this.contactMe.initialized ;
     this.contactMe.text = this.contactMe.initialized ? "CLOSE" :"contact me";
     /*
@@ -51,5 +54,11 @@ setHome(set:boolean){
     .to(this.contactMe
     Container.nativeElement, {duration: 0.5, y: 0, ease: Power4.easeIn});
     }*/
+  }
+  activateAboutMe(){
+    this.contactMe.initialized = false;
+    this.aboutMe.initialized = !this.aboutMe.initialized ;
+
+    this.aboutMe.text = this.aboutMe.initialized ? "CLOSE" :"contact me";
   }
 }
