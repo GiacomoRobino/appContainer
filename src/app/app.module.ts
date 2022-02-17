@@ -15,6 +15,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { MarkupEditorComponent } from './pages/apps/markup-editor/markup-editor.component';
 import { MatrixComponent } from './pages/apps/matrix/matrix.component';
 import { OrganizerComponent } from './pages/apps/organizer/organizer.component';
+import { ContactMeComponent } from './pages/header/contact-me/contact-me.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { OrganizerComponent } from './pages/apps/organizer/organizer.component';
     ParticleNetworkComponent,
     MarkupEditorComponent,
     MatrixComponent,
-    OrganizerComponent
+    OrganizerComponent,
+    ContactMeComponent
   ],
   imports: [
     BrowserModule,
