@@ -1,22 +1,19 @@
 .container {
-    display:flex;
-    gap: 0em;
-    overflow: hidden;
-    whidth: 100%;                      
-  }
+  display: flex;
+  gap: 0em;
+  overflow: hidden;
+}
 
-  .header-button{
-    height: 5em;
-  }
+.header-button {
+  height: 5em;
+  width: 100%;
+}
 
-  .blog-button {
-    width: 100%;
-  }
+.home {
+  opacity: 0;
+}
 
-  .about-button {
-    width: 100%;
-  }
-
-  .home{
-    opacity: 0;
-  }
+.zerowidth {
+  padding-left: 0;
+  padding-right: 0;
+}
