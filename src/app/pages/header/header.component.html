@@ -4,7 +4,7 @@
     <button #home class="blog-button header-button element-container-style home" (click)="goHome()">home</button>
 </div>
 <div *ngIf="this.contactMe.initialized" #contactMeContainer>
-    <app-contact-me></app-contact-me>
+    <app-contact-me (closeContactEvent)="activateContactMe($event)"></app-contact-me>
 </div>
 <div *ngIf="this.aboutMe.initialized" #aboutMeContainer>
     <app-about-me></app-about-me>

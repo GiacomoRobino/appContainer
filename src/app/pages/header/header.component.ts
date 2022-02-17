@@ -36,7 +36,7 @@ setHome(set:boolean){
     tl.to(this.homeButtonElement, {duration: 1, opacity: 0, width:"0px", ease: Power4.easeOut});
   }
   }
-  activateContactMe(){
+  activateContactMe(arg:any = true){
     this.aboutMe.initialized = false;
     this.contactMe.initialized = !this.contactMe.initialized ;
     this.contactMe.text = this.contactMe.initialized ? "CLOSE" :"contact me";
