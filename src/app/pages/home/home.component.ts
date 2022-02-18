@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, OnDestroy, Q
 import { Router } from '@angular/router';
 import { gsap, Power4 } from 'gsap';
 import {ElementRef} from '@angular/core';
+import { timeout } from 'd3';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,6 +10,7 @@ import {ElementRef} from '@angular/core';
 })
 export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChildren('appButton') appButton :QueryList<any> = new QueryList;
+  @ViewChildren('selectable') selectableButton :QueryList<any> = new QueryList;
   @ViewChild('appButtonsContainer') appButtonsContainer: any;
   appButtonElementsArray : any;
   sideEscapePoint = 1700;
@@ -37,6 +39,27 @@ export class HomeComponent implements OnInit, AfterViewInit{
     setTimeout(() => {
     this.router.navigate(['apps'], { queryParams: { appName: appName } });
     }, fadeTIme);
+  }
+
+  selectRandomItem(){
+    let appButtonElementsArray = this.selectableButton.map((nativeElement:any) => nativeElement.nativeElement);
+    appButtonElementsArray.forEach((element:any, index:number) => {
+      this.selectItem(element, appButtonElementsArray[index-1], index);
+    
+  });
+
+  }
+  selectItem(element:any, previousElement:any, index:number){
+    setTimeout(()=>{
+      if(previousElement !== undefined){
+        previousElement.classList.remove("selected-item");
+      }
+      element.classList.add("selected-item");
+      if(index === 3){
+        this.goToApp("hourglass")
+      }
+      }, 500 * index
+      )
   }
 
 }

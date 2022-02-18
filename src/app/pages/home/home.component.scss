@@ -17,3 +17,12 @@
   grid-column-start: 2;
 }
 
+.get-random-item{
+  width: 50%;
+  align: right;
+}
+
+.selected-item{
+  border-color: red;
+  border-width: 10px;
+}
