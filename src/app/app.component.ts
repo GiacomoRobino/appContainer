@@ -9,6 +9,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('header') header: any;
   @ViewChild('headerComponent') headerComponent: any;
   @ViewChild('router') router: any;
+  @ViewChild('serviceWrapper') serviceWrapper: any;
   @HostListener('window:scroll', ['$event']) onScrollEvent() {
     let header = this.header.nativeElement;    
     let sticky = header.offsetTop;
@@ -16,10 +17,14 @@ export class AppComponent implements OnInit, AfterViewInit {
       header.classList.add("sticky");
       this.routerWidth = this.router.nativeElement.offsetWidth;
       let width = this.routerWidth.toString() + "px";
-      console.log(width)
       header.style.width = width;
+
+      let height = header.offsetHeight.toString() + "px";
+      console.log(height);
+      this.serviceWrapper.nativeElement.style.marginTop = height;
     } else {
       header.classList.remove("sticky");
+      this.serviceWrapper.nativeElement.style.marginTop = "0px";
     }
   }
 
