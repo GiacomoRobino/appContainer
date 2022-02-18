@@ -43,7 +43,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.routerWidth = this.router.nativeElement.offsetWidth;
       let width = this.routerWidth.toString() + "px";
       header.style.width = width;
-
+      
       let height = header.offsetHeight.toString() + "px";
       console.log(height);
       this.serviceWrapper.nativeElement.style.marginTop = height;
