@@ -11,21 +11,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('router') router: any;
   @ViewChild('serviceWrapper') serviceWrapper: any;
   @HostListener('window:scroll', ['$event']) onScrollEvent() {
-    let header = this.header.nativeElement;    
-    let sticky = header.offsetTop;
-    if (window.pageYOffset > sticky) {
-      header.classList.add("sticky");
-      this.routerWidth = this.router.nativeElement.offsetWidth;
-      let width = this.routerWidth.toString() + "px";
-      header.style.width = width;
-
-      let height = header.offsetHeight.toString() + "px";
-      console.log(height);
-      this.serviceWrapper.nativeElement.style.marginTop = height;
-    } else {
-      header.classList.remove("sticky");
-      this.serviceWrapper.nativeElement.style.marginTop = "0px";
-    }
+    this.createHeaderOffset();
   }
 
   routerWidth = 0;
@@ -47,5 +33,23 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   onActivate(event: any) {
     this.headerComponent.setHome(Object.keys(event.router.rawUrlTree.queryParams).length !== 0);
+  }
+
+  createHeaderOffset(){
+    let header = this.header.nativeElement;    
+    let sticky = header.offsetTop;
+    if (window.pageYOffset > sticky) {
+      header.classList.add("sticky");
+      this.routerWidth = this.router.nativeElement.offsetWidth;
+      let width = this.routerWidth.toString() + "px";
+      header.style.width = width;
+
+      let height = header.offsetHeight.toString() + "px";
+      console.log(height);
+      this.serviceWrapper.nativeElement.style.marginTop = height;
+    } else {
+      header.classList.remove("sticky");
+      this.serviceWrapper.nativeElement.style.marginTop = "0px";
+    }
   }
 }
