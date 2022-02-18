@@ -13,6 +13,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChildren('selectable') selectableButton :QueryList<any> = new QueryList;
   @ViewChild('appButtonsContainer') appButtonsContainer: any;
   appButtonElementsArray : any;
+  appNamesList = ["organizer", "matrix", "particleNetwork", "hourglass"];
   sideEscapePoint = 1700;
 
 
@@ -43,22 +44,25 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
   selectRandomItem(){
     let appButtonElementsArray = this.selectableButton.map((nativeElement:any) => nativeElement.nativeElement);
+    let validIndex = Math.floor(Math.random() * appButtonElementsArray.length);
     appButtonElementsArray.forEach((element:any, index:number) => {
-      this.selectItem(element, appButtonElementsArray[index-1], index);
+      if(index <= validIndex){
+      this.selectItem(element, appButtonElementsArray[index-1], index, validIndex);
+      }
     
   });
 
   }
-  selectItem(element:any, previousElement:any, index:number){
+  selectItem(element:any, previousElement:any, index:number, validIndex:number){
     setTimeout(()=>{
       if(previousElement !== undefined){
         previousElement.classList.remove("selected-item");
       }
       element.classList.add("selected-item");
-      if(index === 3){
-        this.goToApp("hourglass")
+      if(index === validIndex){
+        this.goToApp(this.appNamesList[index])
       }
-      }, 500 * index
+      }, 170 * index
       )
   }
 
