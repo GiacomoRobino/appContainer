@@ -1,7 +1,9 @@
 <canvas id="imageView" class="canvas-style"></canvas>
 <div class="header-style" #header>
-<app-header></app-header>
+<app-header #headerComponent ></app-header>
 </div>
+<div #router>
 <router-outlet
 (activate)='onActivate($event)'>
 </router-outlet>
+</div>
