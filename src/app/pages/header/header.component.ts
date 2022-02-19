@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   @ViewChild('home') homeButton: any;
   homeButtonElement : any;
   contactMe = {text: "contact me", active: false, initialized: false};
-  aboutMe = {text: "contact me", active: false, initialized: false};
+  aboutMe = {text: "about me", active: false, initialized: false};
   constructor(private router: Router) { }
 
   ngOnInit(): void {
@@ -55,10 +55,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     Container.nativeElement, {duration: 0.5, y: 0, ease: Power4.easeIn});
     }*/
   }
-  activateAboutMe(){
+  activateAboutMe(arg:any = true){
     this.contactMe.initialized = false;
     this.aboutMe.initialized = !this.aboutMe.initialized ;
 
-    this.aboutMe.text = this.aboutMe.initialized ? "CLOSE" :"contact me";
+    this.aboutMe.text = this.aboutMe.initialized ? "CLOSE" :"about me";
   }
 }

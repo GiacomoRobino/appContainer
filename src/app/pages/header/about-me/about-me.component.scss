@@ -1,12 +1,66 @@
-.hoveringContainer {
-    width: 95vw;
-    height: 85vh;
-    position: absolute;
-    z-index: 2;
-  }
-  
-  .glass-effect {
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(5px);
-  }
-  
+.hovering-container {
+  position:fixed; 
+  left: 50%;
+  width: 50%;
+  height: 80vh;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  text-align: center;
+  border-radius: 5%;
+}
+
+.description-container {
+  width:100%;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 4;
+}
+
+.image-container{
+  max-width:100%;
+  max-height: 100%;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.gridded-button {
+  min-width: 100%;
+  min-height: 20%;
+}
+.grid-element {
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+.glass-effect {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.message-form {
+  height: 100%;
+  width: 100%;
+}
+
+.message-text {
+  height: 100%;
+  width: 100%;
+}
+
+.message-button {
+}
+
+.closing-icon{
+  pointer-events: none;
+}
+
+.closing-icon:after {
+  float:left;
+  pointer-events: all;
+  content: "\00d7"; /* This will render the 'X' */
+}

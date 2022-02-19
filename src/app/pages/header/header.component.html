@@ -8,6 +8,6 @@
         <app-contact-me (closeContactEvent)="activateContactMe($event)"></app-contact-me>
     </div>
     <div *ngIf="this.aboutMe.initialized" #aboutMeContainer>
-        <app-about-me></app-about-me>
+        <app-about-me (closeContactEvent)="activateAboutMe($event)"></app-about-me>
 </div>
 </div>
