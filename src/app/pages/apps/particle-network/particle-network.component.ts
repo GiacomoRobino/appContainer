@@ -51,7 +51,6 @@ export class ParticleNetworkComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.canvas =this.canvasReference.nativeElement;
-    console.log(this.canvas);
     this.canvas.width = window.innerWidth * 0.87;
     this.canvas.height = window.innerHeight * 0.7;
     this.w = this.canvas.width;

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
+import { select } from 'd3';
 
 
 @Component({
@@ -8,47 +9,47 @@ import 'rxjs/add/observable/fromEvent';
   templateUrl: './background.component.html',
   styleUrls: ['./background.component.scss']
 })
-export class BackgroundComponent implements OnInit {
-  backgroundCanvas: any;
+export class BackgroundComponent implements OnInit , AfterViewInit{
+  svg: any;
   ctx : any
 
   constructor() { }
 
-  ngOnInit(): void {
-    this.backgroundCanvas = <HTMLCanvasElement>document.querySelector('canvas');
-    this.ctx = this.backgroundCanvas.getContext("2d");
-    this.ctx.fillStyle = "blue";
-    this.ctx.fillRect(0, 0, this.backgroundCanvas.width, this.backgroundCanvas.height);
-    this.ctx.fillStyle = "red";
-    
-
+  ngOnInit() {
+    this.svg = select('.background');
+    this.svg.attr('shaper-rendering', 'crispEdges');
     Observable.fromEvent(document.body, 'mousemove').subscribe((e : any )=> {
-      this.ctx.fillStyle = "rgb(11, 38, 38)";
-      this.ctx.fillRect(0, 0, this.backgroundCanvas.width, this.backgroundCanvas.height);
-      let side = 20;
-      
+    let barHeight = 20;
     let x0 = e.clientX;
     let y0 = e.clientY;
-    let x1 = x0 + side;
-    let y1 = y0 + side;
-    this.drawLineY(y0, side);
-    this.drawLineY(y0, side,2);
-    this.drawLineY(y0, side,4);
-    this.drawLineY(y0, side,16);
-
-    this.drawLineX(x0, side);
-    this.drawLineX(x0, side,2);
-    this.drawLineX(x0, side,4);
-    this.drawLineX(x0, side,16);
-
-    })
+    this.svg.selectAll('rect').remove();
+    this.svg.append('rect')
+    .attr('x', 0)
+    .attr('y', y0 - barHeight/2)
+    .attr('width', 2000)
+    .attr('height', barHeight)
+    .attr('fill', 'yellow');
+   
+    this.svg.append('rect')
+    .attr('x', x0 - barHeight/2)
+    .attr('y', 0)
+    .attr('width',  barHeight)
+    .attr('height', 2000)
+    .attr('fill', 'yellow');
+    this.setImage(x0, y0);
+    });
   }
-  drawLineY(y0 : number, side : number, divider: number = 1) {
-    this.ctx.fillStyle = "rgb(40, 46, 42)";
-    this.ctx.fillRect(0, y0/divider, this.backgroundCanvas.width, side);
-    }
-  drawLineX(x0 : number, side : number, divider: number = 1) {
-    this.ctx.fillStyle = "rgb(40, 46, 42)";
-    this.ctx.fillRect(x0/divider, 0, side, this.backgroundCanvas.height);
-    }
+
+  ngAfterViewInit() {
+    
+
+  }
+
+  setImage(widthNum :number, heightNum : number) {
+    let canvas = <HTMLCanvasElement>document.querySelector('canvas');
+    this.ctx = canvas.getContext("2d");
+    let img = document.getElementById("hiddenImage");
+    this.ctx.drawImage(img, 0, 0, widthNum, heightNum);
+  }
+
 }
