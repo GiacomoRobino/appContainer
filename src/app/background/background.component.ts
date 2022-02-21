@@ -48,7 +48,14 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     let x = summer._groups[0];
     let image = x[0];
     image.style.height = heightNum.toString() + "px";
-    //image.style.width = "55 vw";
+
+    
+    let winter : any = select('.winter');
+    let y = winter._groups[0];
+    let imageWinter = x[0];
+    
+    imageWinter.style.width = "50vw";
+    imageWinter.style.maxWidth = widthNum.toString() + "px";
   }
 
 }

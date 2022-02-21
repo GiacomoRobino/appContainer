@@ -16,15 +16,16 @@
 }
 
 .summer{
-  width: 100vw;
-  height: 90vh;
-  object-position: 50% 0%;
+  width: 50vw;
+  overflow: hidden;
+  height: 100vh;
+  object-position: 0% 0%;
   border: 0px solid black;
 }
 
 .winter{
-  width: 100vw;
+  width: 50vw;
   height: 100vh;
-  object-position: 50% 0%;
+  object-position: 0% 0%;
   border: 0px solid black;
 }
