@@ -17,6 +17,7 @@ import { MatrixComponent } from './pages/apps/matrix/matrix.component';
 import { OrganizerComponent } from './pages/apps/organizer/organizer.component';
 import { ContactMeComponent } from './pages/header/contact-me/contact-me.component';
 import { AboutMeComponent } from './pages/header/about-me/about-me.component';
+import { BackgroundComponent } from './background/background.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { AboutMeComponent } from './pages/header/about-me/about-me.component';
     MatrixComponent,
     OrganizerComponent,
     ContactMeComponent,
-    AboutMeComponent
+    AboutMeComponent,
+    BackgroundComponent
   ],
   imports: [
     BrowserModule,

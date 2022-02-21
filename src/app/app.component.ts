@@ -16,19 +16,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   routerWidth = 0;
   title = 'app-container';
-  backgroundCanvas: any;
 
   ngOnInit(): void {
-    
-    this.backgroundCanvas = <HTMLCanvasElement>document.querySelector('canvas');
-    var ctx = this.backgroundCanvas.getContext("2d");
-    ctx.fillStyle = "blue";
-    ctx.fillRect(0, 0, this.backgroundCanvas.width, this.backgroundCanvas.height);
   }
 
   ngAfterViewInit(){
-    
-    
   }
 
   onActivate(event: any) {
