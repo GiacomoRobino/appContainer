@@ -44,6 +44,7 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
   }
 
   setImage(widthNum :number, heightNum : number) {
+
     let summer : any = select('.summer');
     let x = summer._groups[0];
     let image = x[0];
@@ -56,6 +57,12 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     
     imageWinter.style.width = "50vw";
     imageWinter.style.maxWidth = widthNum.toString() + "px";
+
+    let fall : any = select('.fall');
+    let z = fall._groups[0];
+    let imageFall = z[0];
+    imageFall.style.width = widthNum.toString() + "px";
+    imageFall.style.height = (641 - heightNum).toString() + "px";
   }
 
 }
