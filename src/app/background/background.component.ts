@@ -46,17 +46,6 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
   }
 
   setImage(widthNum :number, heightNum : number) {
-    console.log(widthNum, heightNum);
-    let canvas = <HTMLCanvasElement>document.querySelector('canvas');
-    this.ctx = canvas.getContext("2d");
-    let img = document.getElementById("hiddenImage");
-
-    let sourceH = 1000/heightNum;
-    let sourceW = 10;
-    let canvasX0 = 0;
-    let canvasY0 = 0;
-
-    this.ctx.drawImage(img, 0, 0, sourceW, sourceH, 0, 0, sourceW, sourceH);
   }
 
 }
