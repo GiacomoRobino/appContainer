@@ -14,3 +14,11 @@
 .image-season{
   z-index:-2;
 }
+
+.summer{
+  width: 100vw; /* width of container */
+  height: 50vh; /* height of container */
+  object-fit: cover;
+  object-position: 0% 25%; /* try 20px 10px */ 
+  border: 5px solid black;
+}
