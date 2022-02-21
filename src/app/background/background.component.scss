@@ -5,7 +5,7 @@
   width: 100vw;
   max-width: 100%;
   height:100vh;
-  
+  object-fit: none;
 }
 .bg-style{
   z-index:-1;
@@ -16,9 +16,15 @@
 }
 
 .summer{
-  width: 100vw; /* width of container */
-  height: 50vh; /* height of container */
-  object-fit: cover;
-  object-position: 0% 25%; /* try 20px 10px */ 
-  border: 5px solid black;
+  width: 100vw;
+  height: 90vh;
+  object-position: 50% 0%;
+  border: 0px solid black;
+}
+
+.winter{
+  width: 100vw;
+  height: 100vh;
+  object-position: 50% 0%;
+  border: 0px solid black;
 }
