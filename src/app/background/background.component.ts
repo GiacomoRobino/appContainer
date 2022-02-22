@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import { select } from 'd3';
@@ -10,9 +10,13 @@ import { select } from 'd3';
   styleUrls: ['./background.component.scss']
 })
 export class BackgroundComponent implements OnInit , AfterViewInit{
+  @ViewChild('bg2') bg2 : any;
   moon = true;
   svg: any;
-  ctx : any
+  ctx : any;
+  
+  //599 is a magic number TODO: find a better way to do this
+  imageHeight = 599;
 
   constructor() { }
 
@@ -20,7 +24,7 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     this.svg = select('.background');
     this.svg.attr('shaper-rendering', 'crispEdges');
     Observable.fromEvent(document.body, 'mousemove').subscribe((e : any )=> {
-    let barHeight = 100;
+    let barHeight = 1;
     let x0 = e.clientX;
     let y0 = e.clientY;
     this.svg.selectAll('rect').remove();
@@ -45,7 +49,13 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
   }
 
   ngAfterViewInit() {
+    this.setBottomImage();
+  }
 
+  setBottomImage(){
+    let viewHeight = window.innerHeight;
+    console.log(viewHeight - this.imageHeight);
+    this.bg2.nativeElement.style.bottom = (viewHeight - this.imageHeight).toString() + "px";
   }
 
   initCanvas() {
@@ -77,14 +87,11 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     imageWinter.style.width = "50vw";
     imageWinter.style.maxWidth = widthNum.toString() + "px";
 
-    //todo:set dynamically border from bottom
-    //599 is a magic number TODO: find a better way to do this
-
     let fall : any = select('.fall');
     let z = fall._groups[0];
     let imageFall = z[0];
     imageFall.style.width = widthNum.toString() + "px";
-    imageFall.style.height = (599 - heightNum).toString() + "px";
+    imageFall.style.height = (this.imageHeight - heightNum).toString() + "px";
 
   }
 
