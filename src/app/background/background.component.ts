@@ -26,7 +26,7 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     this.svg.append('rect')
     .attr('x', 0)
     .attr('y', y0 - barHeight/2)
-    .attr('width', 2000)
+    .attr('width', x0)
     .attr('height', barHeight)
     .attr('fill', 'black');
    
@@ -66,13 +66,7 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     imageFall.style.width = widthNum.toString() + "px";
     //599 is image size
     imageFall.style.height = (599 - heightNum).toString() + "px";
-/*
-    let spring : any = select('.spring');
-    let w = spring._groups[0];
-    let imageSpring = w[0];
-    imageSpring.style.width = (399 - widthNum).toString() + "px";
-    imageSpring.style.height = (599 - heightNum).toString() + "px";
-*/
+
   }
 
 }
