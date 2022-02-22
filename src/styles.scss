@@ -1,8 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 .element-container-style {
     background-color: darkgray;
-    color: white;
+    color: black;
     padding: 0em;
     border-radius: 20px;
-    border: 1px solid black;
+    border: 0.5em solid black;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: 150%;
   }
