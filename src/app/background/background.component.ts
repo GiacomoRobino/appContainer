@@ -46,11 +46,13 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     canvas.width = 500;
     canvas.height = 500;
     let ctx : any = canvas.getContext('2d');
-    ctx.beginPath();
-ctx.rect(20, 20, 150, 100);
-ctx.stroke();
+
+    canvas.style.width='100%';
+    canvas.style.height='100%';
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
     setTimeout(() => {
-      this.moon = false;
+     // this.moon = false;
     }, 3000);
   }
 
