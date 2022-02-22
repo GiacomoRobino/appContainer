@@ -43,12 +43,7 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
 
   ngAfterViewInit() {
     let canvas = <HTMLCanvasElement>document.querySelector('canvas');
-    canvas.width = 500;
-    canvas.height = 500;
     let ctx : any = canvas.getContext('2d');
-
-    canvas.style.width='100%';
-    canvas.style.height='100%';
     canvas.width  = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     setTimeout(() => {
