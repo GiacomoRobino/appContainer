@@ -20,7 +20,7 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     this.svg = select('.background');
     this.svg.attr('shaper-rendering', 'crispEdges');
     Observable.fromEvent(document.body, 'mousemove').subscribe((e : any )=> {
-    let barHeight = 1;
+    let barHeight = 100;
     let x0 = e.clientX;
     let y0 = e.clientY;
     this.svg.selectAll('rect').remove();
