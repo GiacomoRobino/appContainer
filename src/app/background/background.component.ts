@@ -39,16 +39,27 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     .attr('fill', 'black');
     this.setImage(x0, y0);
     });
+
+    this.initCanvas();
+
   }
 
   ngAfterViewInit() {
+
+  }
+
+  initCanvas() {
     let canvas = <HTMLCanvasElement>document.querySelector('canvas');
     let ctx : any = canvas.getContext('2d');
     canvas.width  = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-    setTimeout(() => {
-     // this.moon = false;
-    }, 3000);
+    ctx.beginPath();
+    ctx.rect(20, 20, 300, 300);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.rect(20, 1200, 300, 1300);
+    ctx.stroke();
   }
 
   setImage(widthNum :number, heightNum : number) {
