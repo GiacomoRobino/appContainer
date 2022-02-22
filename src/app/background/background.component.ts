@@ -58,11 +58,21 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     imageWinter.style.width = "50vw";
     imageWinter.style.maxWidth = widthNum.toString() + "px";
 
+
+    //todo:set dynamically border from bottom
     let fall : any = select('.fall');
     let z = fall._groups[0];
     let imageFall = z[0];
     imageFall.style.width = widthNum.toString() + "px";
-    imageFall.style.height = (641 - heightNum).toString() + "px";
+    //599 is image size
+    imageFall.style.height = (599 - heightNum).toString() + "px";
+/*
+    let spring : any = select('.spring');
+    let w = spring._groups[0];
+    let imageSpring = w[0];
+    imageSpring.style.width = (399 - widthNum).toString() + "px";
+    imageSpring.style.height = (599 - heightNum).toString() + "px";
+*/
   }
 
 }

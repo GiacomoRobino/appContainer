@@ -31,7 +31,7 @@
 .bg-fixed2{
   position:fixed;
   left:0; 
-  bottom: 0;
+  bottom: 42px;
   width: 100vw;
   max-width: 100%;
   height:100vh;
@@ -41,4 +41,22 @@
 .fall{
   width: 50vw;
   object-position: 0% 100%;
+}
+
+.bg-fixed3{
+  position:fixed;
+  top:0;
+  right:0; 
+  bottom: 42px;
+  width: 100vw;
+  max-width: 100%;
+  height:100vh;
+  object-fit: none;
+}
+
+.spring{
+  width: 50vw;
+  overflow: hidden;
+  height: 100vh;
+  object-position: 0% 0%;
 }
