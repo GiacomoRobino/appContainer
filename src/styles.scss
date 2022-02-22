@@ -1,10 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 .element-container-style {
-    background-color: white;
+    background-color: #F7F7F9;
     color: black;
     padding: 0em;
     border-radius: 0px;
     font-family: "Lucida Console", "Courier New", monospace;
     font-size: 150%;
     text-align: center;
+    transition: background-color 0.5s ease;
+  }
+
+  .element-container-style:hover {
+    background-color: #F7E733;
   }
