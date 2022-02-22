@@ -10,6 +10,7 @@ import { select } from 'd3';
   styleUrls: ['./background.component.scss']
 })
 export class BackgroundComponent implements OnInit , AfterViewInit{
+  moon = true;
   svg: any;
   ctx : any
 
@@ -41,6 +42,9 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
   }
 
   ngAfterViewInit() {
+    setTimeout(() => {
+      this.moon = false;
+    }, 3000);
   }
 
   setImage(widthNum :number, heightNum : number) {
