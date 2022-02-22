@@ -58,13 +58,13 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     imageWinter.style.width = "50vw";
     imageWinter.style.maxWidth = widthNum.toString() + "px";
 
-
     //todo:set dynamically border from bottom
+    //599 is a magic number TODO: find a better way to do this
+
     let fall : any = select('.fall');
     let z = fall._groups[0];
     let imageFall = z[0];
     imageFall.style.width = widthNum.toString() + "px";
-    //599 is image size
     imageFall.style.height = (599 - heightNum).toString() + "px";
 
   }

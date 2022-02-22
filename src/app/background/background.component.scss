@@ -11,7 +11,7 @@
   z-index:-1;
 }
 
-.image-season{
+.z-index-set{
   z-index:-2;
 }
 
@@ -33,7 +33,7 @@
   left:0; 
   bottom: 42px;
   width: 100vw;
-  max-width: 100%;
+  max-width: 50vw;
   height:100vh;
   object-fit: none;
 }
@@ -43,16 +43,6 @@
   object-position: 0% 100%;
 }
 
-.bg-fixed3{
-  position:fixed;
-  top:0;
-  right:0; 
-  bottom: 42px;
-  width: 100vw;
-  max-width: 100%;
-  height:100vh;
-  object-fit: none;
-}
 
 .spring{
   z-index: 2;
@@ -60,8 +50,4 @@
   overflow: hidden;
   height: 100vh;
   object-position: 0% 0%;
-}
-
-.crop-left {
-  clip-path: (100px 50px);
 }
