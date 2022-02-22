@@ -1,14 +1,17 @@
-<div id="canvas" class="canvas-style"></div>
 <svg #background class="bg-style background bg-fixed"></svg>
 
 <div *ngIf="moon">
-<img id="winter" src="assets/images/4images/offset/moon/plain.jpg" class="z-index-set winter bg-fixed" alt="">
-<img #summerImage src="assets/images/4images/offset/moon/bw.jpg" class="z-index-set summerImage summer image-season bg-fixed" alt="">
-<img id="fall" src="assets/images/4images/offset/moon/flare.jpg" class="z-index-set fall bg-fixed2 fall" alt="">
+    <img id="winter" src="assets/images/4images/offset/moon/plain.jpg" class="z-index-set winter bg-fixed" alt="">
+    <img #summerImage src="assets/images/4images/offset/moon/bw.jpg" class="z-index-set summerImage summer image-season bg-fixed" alt="">
+    <img id="fall" src="assets/images/4images/offset/moon/flare.jpg" class="z-index-set fall bg-fixed2 fall" alt="">
 </div>
 
 <div *ngIf="!moon">
-<img id="winter" src="assets/images/4images/offset/tree/plain.jpg" class="z-index-set winter bg-fixed" alt="">
-<img #summerImage src="assets/images/4images/offset/tree/bw.jpg" class="z-index-set summerImage summer image-season bg-fixed" alt="">
-<img id="fall" src="assets/images/4images/offset/tree/flare.jpg" class="z-index-set fall bg-fixed2 fall" alt="">
+    <img id="winter" src="assets/images/4images/offset/tree/plain.jpg" class="z-index-set winter bg-fixed" alt="">
+    <img #summerImage src="assets/images/4images/offset/tree/bw.jpg" class="z-index-set summerImage summer image-season bg-fixed" alt="">
+    <img id="fall" src="assets/images/4images/offset/tree/flare.jpg" class="z-index-set fall bg-fixed2 fall" alt="">
+</div>
+<div class="left-bg"></div>
+<div class="canvas-align">
+    <canvas class="canvas"></canvas>
 </div>

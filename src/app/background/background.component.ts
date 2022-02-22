@@ -42,6 +42,13 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
   }
 
   ngAfterViewInit() {
+    let canvas = <HTMLCanvasElement>document.querySelector('canvas');
+    canvas.width = 500;
+    canvas.height = 500;
+    let ctx : any = canvas.getContext('2d');
+    ctx.beginPath();
+ctx.rect(20, 20, 150, 100);
+ctx.stroke();
     setTimeout(() => {
       this.moon = false;
     }, 3000);
