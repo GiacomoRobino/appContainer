@@ -3,11 +3,11 @@ import { Particle } from './model';
 import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
-  selector: 'app-particle-network',
-  templateUrl: './particle-network.component.html',
-  styleUrls: ['./particle-network.component.scss'],
+  selector: 'app-particle-canvas',
+  templateUrl: './particle-canvas.component.html',
+  styleUrls: ['./particle-canvas.component.scss'],
 })
-export class ParticleNetworkComponent implements OnInit, AfterViewInit {
+export class ParticleCanvasComponent implements OnInit, AfterViewInit {
   @ViewChild ('canvas') canvasReference : any;
   public canvas: any;
   public netActivated = true;

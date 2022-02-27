@@ -18,6 +18,7 @@ import { OrganizerComponent } from './pages/apps/organizer/organizer.component';
 import { ContactMeComponent } from './pages/header/contact-me/contact-me.component';
 import { AboutMeComponent } from './pages/header/about-me/about-me.component';
 import { BackgroundComponent } from './background/background.component';
+import { ParticleCanvasComponent } from './utils/particle-canvas/particle-canvas.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { BackgroundComponent } from './background/background.component';
     OrganizerComponent,
     ContactMeComponent,
     AboutMeComponent,
-    BackgroundComponent
+    BackgroundComponent,
+    ParticleCanvasComponent
   ],
   imports: [
     BrowserModule,
