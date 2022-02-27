@@ -19,6 +19,7 @@ import { ContactMeComponent } from './pages/header/contact-me/contact-me.compone
 import { AboutMeComponent } from './pages/header/about-me/about-me.component';
 import { BackgroundComponent } from './background/background.component';
 import { ParticleCanvasComponent } from './utils/particle-canvas/particle-canvas.component';
+import { FooterContainerComponent } from './pages/footer/footer-container/footer-container.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ParticleCanvasComponent } from './utils/particle-canvas/particle-canvas
     ContactMeComponent,
     AboutMeComponent,
     BackgroundComponent,
-    ParticleCanvasComponent
+    ParticleCanvasComponent,
+    FooterContainerComponent
   ],
   imports: [
     BrowserModule,
