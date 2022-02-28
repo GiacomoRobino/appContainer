@@ -6,6 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./footer-container.component.scss']
 })
 export class FooterContainerComponent implements OnInit {
+  public skills = [{name:"angular"},
+  {name:"d3js"},
+  {name:"typescript"},
+  {name:"css"},
+  {name:"html"},
+  {name:"greensok"}]
 
   constructor() { }
 
