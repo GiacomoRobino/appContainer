@@ -1,11 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
+.font-style{
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: 150%;
+}
+
+.font-style-small{
+  @extend .font-style;
+  font-size: 100%;
+  }
+
 .element-container-style {
+    @extend .font-style;
     background-color: #F7F7F9;
     color: black;
     padding: 0em;
     border-radius: 0px;
-    font-family: "Lucida Console", "Courier New", monospace;
-    font-size: 150%;
     text-align: center;
     transition: background-color 0.5s ease;
   }
