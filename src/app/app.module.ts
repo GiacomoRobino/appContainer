@@ -20,6 +20,7 @@ import { AboutMeComponent } from './pages/header/about-me/about-me.component';
 import { BackgroundComponent } from './background/background.component';
 import { ParticleCanvasComponent } from './utils/particle-canvas/particle-canvas.component';
 import { FooterContainerComponent } from './pages/footer/footer-container/footer-container.component';
+import { SkillContainerComponent } from './pages/footer/footer-container/skill-container/skill-container.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { FooterContainerComponent } from './pages/footer/footer-container/footer
     AboutMeComponent,
     BackgroundComponent,
     ParticleCanvasComponent,
-    FooterContainerComponent
+    FooterContainerComponent,
+    SkillContainerComponent
   ],
   imports: [
     BrowserModule,

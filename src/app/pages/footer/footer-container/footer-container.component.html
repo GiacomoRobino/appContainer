@@ -1,4 +1,6 @@
-<div class="header header-text">footer-header</div>
-<div class="skills">footer 
-        <div class="skill" *ngFor="let skill of skills">{{skill.name}}</div>
+<div class="header header-text">Skills</div>
+<div class="skills"> 
+        <div class="skill" *ngFor="let skill of skills">
+              <app-skill-container [skill]="skill.name"></app-skill-container> 
+        </div>
 </div>

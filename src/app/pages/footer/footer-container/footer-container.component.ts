@@ -9,9 +9,10 @@ export class FooterContainerComponent implements OnInit {
   public skills = [{name:"angular"},
   {name:"d3js"},
   {name:"typescript"},
-  {name:"css"},
+  {name:"css3"},
   {name:"html"},
-  {name:"greensok"}]
+  {name:"greensock"},
+  {name:"javascript"}]
 
   constructor() { }
 
