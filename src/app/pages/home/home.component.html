@@ -15,8 +15,9 @@
         preview
     </div>
     <button #appButton #selectable class="app-button element-container-style" 
-    (mouseenter)="onMouseEnter()" (mouseout)="onMouseLeave()" (click)="goToApp('organizer')">Organizer</button>
-    <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('matrix')">Matrix</button>
+    (mouseenter)="onMouseEnter(2)" (mouseout)="onMouseLeave()" (click)="goToApp('organizer')">Organizer</button>
+    <button #appButton #selectable class="app-button element-container-style"
+    (mouseenter)="onMouseEnter(3)" (mouseout)="onMouseLeave()"  (click)="goToApp('matrix')">Matrix</button>
     <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('particleNetwork')">Particle Network</button>
     <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('hourglass')">Rainbown Path</button>
     <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('markupEditor')">Markup editor</button>

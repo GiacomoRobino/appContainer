@@ -69,16 +69,24 @@ export class HomeComponent implements OnInit, AfterViewInit{
   }
 
   
-  onMouseEnter() {
-    this.enterPreviewAnimation();
+  onMouseEnter(row : number) {
+    this.enterPreviewAnimation(row);
   }
-  onMouseLeave() { console.log("mouse leave"); }
+  onMouseLeave() { 
+    this.exitPreviewAnimation();
+  }
 
-  enterPreviewAnimation() {let tl = gsap.timeline();
-    
-    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, width:"100%", ease: Power4.easeIn});
-    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, height:"100%", ease: Power4.easeIn}, ">");
-  
+  enterPreviewAnimation(row: number) {let tl = gsap.timeline();
+    let element = this.appPreviewContainer.nativeElement;
+    element.style.gridRowStart = row;
+    element.style.gridRowEnd = row + 3;
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.3, width:"100%", ease: Power4.easeIn});
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.8, height:"100%", ease: Power4.easeIn}, ">");
+  }
+
+  exitPreviewAnimation() {let tl = gsap.timeline();
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, width:"0%", ease: Power4.easeIn});
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, height:"0%", ease: Power4.easeIn}, ">");
   }
 
 }
