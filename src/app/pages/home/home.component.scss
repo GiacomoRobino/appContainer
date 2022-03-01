@@ -17,6 +17,16 @@
   grid-column-start: 2;
 }
 
+.preview-element {
+  width: 40%;
+  height: 40%;
+  grid-column-start: 1;
+  grid-row-start: 2;
+  grid-row-end: 5;
+  background-color: red;
+}
+
+
 .get-random-item{
   width: 50%;
   align: right;

@@ -5,7 +5,7 @@ import { gsap, Power4 } from 'gsap';
 @Component({
   selector: 'app-app-wrapper',
   templateUrl: './app-wrapper.component.html',
-  styleUrls: ['./app-wrapper.component.scss']
+  styleUrls: ['./app-wrapper.component.scss'],
 })
 export class AppWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('appContainer') appContainer: any;

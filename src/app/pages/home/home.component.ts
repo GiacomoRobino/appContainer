@@ -12,7 +12,9 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChildren('appButton') appButton :QueryList<any> = new QueryList;
   @ViewChildren('selectable') selectableButton :QueryList<any> = new QueryList;
   @ViewChild('appButtonsContainer') appButtonsContainer: any;
+  @ViewChild('appPreviewContainer') appPreviewContainer: any;
   appButtonElementsArray : any;
+  appPreviewElement: any;
   appNamesList = ["organizer", "matrix", "particleNetwork", "hourglass"];
   sideEscapePoint = 1700;
 
@@ -31,7 +33,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
   exitAnimation(fadeTime:number): void {
     let tl = gsap.timeline();
-      tl.to(this.appButtonsContainer.nativeElement, {duration: fadeTime / 1000, x: -this.sideEscapePoint, ease: Power4.easeIn});
+    tl.to(this.appButtonsContainer.nativeElement, {duration: fadeTime / 1000, x: -this.sideEscapePoint, ease: Power4.easeIn});
   }
 
   goToApp(appName: string) {
@@ -64,6 +66,19 @@ export class HomeComponent implements OnInit, AfterViewInit{
       }
       }, 170 * index
       )
+  }
+
+  
+  onMouseEnter() {
+    this.enterPreviewAnimation();
+  }
+  onMouseLeave() { console.log("mouse leave"); }
+
+  enterPreviewAnimation() {let tl = gsap.timeline();
+    
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, width:"100%", ease: Power4.easeIn});
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, height:"100%", ease: Power4.easeIn}, ">");
+  
   }
 
 }

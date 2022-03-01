@@ -11,8 +11,11 @@
     <div #appButton  class="snippets-header element-container-style">Snippets/open random snippet
         <button class="get-random-item" (click)="selectRandomItem()">get random item</button>
     </div>
-
-    <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('organizer')">Organizer</button>
+    <div #appPreviewContainer class="preview-element">
+        preview
+    </div>
+    <button #appButton #selectable class="app-button element-container-style" 
+    (mouseenter)="onMouseEnter()" (mouseout)="onMouseLeave()" (click)="goToApp('organizer')">Organizer</button>
     <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('matrix')">Matrix</button>
     <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('particleNetwork')">Particle Network</button>
     <button #appButton #selectable class="app-button element-container-style" (click)="goToApp('hourglass')">Rainbown Path</button>
