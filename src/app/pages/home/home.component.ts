@@ -77,16 +77,32 @@ export class HomeComponent implements OnInit, AfterViewInit{
   }
 
   enterPreviewAnimation(row: number) {let tl = gsap.timeline();
+    let rows = this.getRow(row);
     let element = this.appPreviewContainer.nativeElement;
-    element.style.gridRowStart = row;
-    element.style.gridRowEnd = row + 3;
-    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.3, width:"100%", ease: Power4.easeIn});
-    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.8, height:"100%", ease: Power4.easeIn}, ">");
+    console.log(rows);
+    element.style.gridRowStart = rows.start;
+    element.style.gridRowEnd = rows.end;
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.1, width:"100%", ease: Power4.easeIn});
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.3, height:"100%", ease: Power4.easeIn}, ">");
+  }
+
+  getRow(row:number){
+    let totalRows = 6;
+    let result = {start: 2, end: 5};
+    if(row > 1 && row < totalRows){
+      result.start = result.start - 2 + row;
+      result.end = result.start + 3;
+    }
+    else if(row === totalRows){
+      result.start = result.start - 3 + row;;
+      result.end = result.start + 3;
+    }
+    return result;
   }
 
   exitPreviewAnimation() {let tl = gsap.timeline();
-    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, width:"0%", ease: Power4.easeIn});
-    tl.to(this.appPreviewContainer.nativeElement, {duration: 1, height:"0%", ease: Power4.easeIn}, ">");
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.1, width:"0%", ease: Power4.easeIn});
+    tl.to(this.appPreviewContainer.nativeElement, {duration: 0.1, height:"0%", ease: Power4.easeIn}, ">");
   }
 
 }
