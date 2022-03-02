@@ -1,7 +1,7 @@
 <div class="container">
     <button class="header-button element-container-style" (click)="activateContactMe()">{{contactMe.text}}</button>
     <button class="header-button element-container-style"(click)="activateAboutMe()">about</button>
-    <button #home class="element-container-style home zerowidth" (click)="goHome()">home</button>
+    <button #home class="element-container-style home zerowidth" style="width: 0px; opacity: 0;" (click)="goHome()">home</button>
 </div>
 <div class="info-container">
     <div *ngIf="this.contactMe.initialized" #contactMeContainer>
