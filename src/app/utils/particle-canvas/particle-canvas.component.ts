@@ -22,7 +22,7 @@ export class ParticleCanvasComponent implements OnInit, AfterViewInit {
   public options = {
     particleColor: 'rgba(255,255,255)',
     lineColor: 'rgba(0,181,255)',
-    particleAmount: 200,
+    particleAmount: 400,
     defaultRadius: 0.5,
     variantRadius: 0.5,
     defaultSpeed: 1,
@@ -33,7 +33,7 @@ export class ParticleCanvasComponent implements OnInit, AfterViewInit {
   public staticParticleOptions = {    
   particleColor: 'rgba(255,255,255)',
   lineColor: 'rgba(0,181,255)',
-  particleAmount: 200,
+  particleAmount: 400,
   defaultRadius: 0.5,
   variantRadius: 0.5,
   defaultSpeed: 0,
