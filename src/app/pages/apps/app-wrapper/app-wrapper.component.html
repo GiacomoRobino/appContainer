@@ -3,8 +3,8 @@
     <button class="app-button element-container-style sidebar-button"><span class="button-vertical-text">github</span></button>
     <button class="app-button element-container-style sidebar-button"><span class="button-vertical-text">about</span></button>
   </div>
-  <div #appContainer class="carousel element-container-style">
-    <app-organizer class="element-container-style" *ngIf="appName === 'organizer'"></app-organizer>
+  <div #appContainer class="carousel app-container">
+    <app-organizer *ngIf="appName === 'organizer'"></app-organizer>
     <app-matrix class="element-container-style" *ngIf="appName === 'matrix'"></app-matrix>
     <app-particle-network class="element-container-style" *ngIf="appName === 'particleNetwork'"></app-particle-network>
     <app-markup-editor *ngIf="appName === 'markupEditor'"></app-markup-editor>

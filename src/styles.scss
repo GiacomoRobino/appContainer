@@ -23,3 +23,9 @@
   .element-container-style:hover {
     background-color: #F7E733;
   }
+button{
+  @extend .font-style-small;
+}
+.app-container{
+  background-color: #F7F7F9;
+}
