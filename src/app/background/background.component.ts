@@ -21,6 +21,7 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
   constructor() { }
 
   ngOnInit() {
+    /*
     this.svg = select('.background');
     this.svg.attr('shaper-rendering', 'crispEdges');
     Observable.fromEvent(document.body, 'mousemove').subscribe((e : any )=> {
@@ -45,11 +46,12 @@ export class BackgroundComponent implements OnInit , AfterViewInit{
     });
 
     this.initCanvas();
+    */
 
   }
 
   ngAfterViewInit() {
-    this.setBottomImage();
+    //this.setBottomImage();
   }
 
   setBottomImage(){

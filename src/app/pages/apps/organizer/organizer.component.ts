@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { select, arc, pie } from 'd3';
+import { Activity } from './model';
 
 @Component({
   selector: 'app-organizer',
@@ -11,21 +12,19 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   public g: any;
   public currentList = 0;
   public circleAttributes = { innerRadius: 70, outerRadius: 130 };
+  public activities = [
+    new Activity("a", 1, "red"),
+    new Activity("b", 2, "green")
+  ];
   public details: Array<any[]> = [
-    [
-      { grade: 'orange', number: 8 },
-      { grade: 'green', number: 8 },
-      { grade: 'red', number: 18 },
-      { grade: 'blue', number: 20 },
-      { grade: 'yellow', number: 12 },
-      { grade: 'black', number: 30 },
-    ],
+    this.activities,
     [
       { grade: 'green', number: 8 },
       { grade: 'red', number: 18 },
       { grade: 'blue', number: 20 },
     ],
   ];
+  public translate = {center: ""};
 
   @ViewChild('organizerSurface') organizerSurface: any;
 
@@ -39,10 +38,12 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     let height = this.organizerSurface.nativeElement.clientHeight;
     let width = this.organizerSurface.nativeElement.clientWidth;
+    this.translate.center = 'translate(' + (width / 2).toString() + ','  + (height / 2).toString() + ')';
+
     let data = pie()
       .sort(null)
       .value(function (d: any) {
-        return d.number;
+        return d.duration;
       })(this.details[this.currentList]);
 
     let segments = arc()
@@ -51,27 +52,27 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
       .padAngle(0.05)
       .padRadius(50);
 
-    this.g = this.svg.append('g').attr('transform', 'translate(250,250)');
+    this.g = this.svg.append('g').attr('transform', this.translate.center);
     let sections = this.g.selectAll('path').data(data);
     sections.enter().append('path');
     this.render();
     this.initCentralButtons();
   }
 
-  initCentralButtons(){
+  initCentralButtons() {
     let clickClockWise: any = arc()
     .outerRadius(this.circleAttributes.innerRadius - 5)
     .innerRadius(0)
     .startAngle(-Math.PI / 2.5)
     .endAngle(Math.PI / 1.5);
 
-  this.svg
-    .append('path')
-    .attr('transform', 'translate(250,250)')
-    .attr('d', clickClockWise()).attr("fill", "black")
-    .on('click', (clickEvent: any, selectedItem: any) => this.rotateClockWise())
-    ;
-  
+    this.svg
+      .append('path')
+      .attr('transform', this.translate.center)
+      .attr('d', clickClockWise()).attr("fill", "black")
+      .on('click', (clickEvent: any, selectedItem: any) => this.rotateClockWise())
+      ;
+    
     
   let clickCounterClockWise: any = arc()
   .outerRadius(this.circleAttributes.innerRadius - 5)
@@ -79,19 +80,19 @@ export class OrganizerComponent implements OnInit, AfterViewInit {
   .startAngle(Math.PI / 1.5)
   .endAngle( 1.66 * Math.PI);
 
-this.svg
-  .append('path')
-  .attr('transform', 'translate(250,250)')
-  .attr('d', clickCounterClockWise()).attr("fill", "red")
-  .on('click', (clickEvent: any, selectedItem: any) => this.rotateCounterClockWise())
-  }
+  this.svg
+    .append('path')
+    .attr('transform', this.translate.center)
+    .attr('d', clickCounterClockWise()).attr("fill", "red")
+    .on('click', (clickEvent: any, selectedItem: any) => this.rotateCounterClockWise())
+    }
 
   render(angleOffset: number = 1) {
     angleOffset = this.getStartingAngle();
     let data = pie()
       .sort(null)
       .value(function (d: any) {
-        return d.number;
+        return d.duration;
       })
       .startAngle(angleOffset)
       .endAngle(2 * Math.PI + angleOffset)(this.details[this.currentList]);
@@ -127,16 +128,16 @@ this.svg
   getStartingAngle() {
     let sizesSum = 0;
     for (let i of this.details[this.currentList]) {
-      sizesSum += i.number;
+      sizesSum += i.duration;
     }
     let unit = (2 * Math.PI) / sizesSum;
     let offset =
-      Math.PI / 2 - unit * (this.details[this.currentList][0].number / 2);
+      Math.PI / 2 - unit * (this.details[this.currentList][0].duration / 2);
     return offset;
   }
 
   addActivity() {
-    this.details[this.currentList].push({ grade: 'grey', number: 2 });
+    this.details[this.currentList].push({ grade: 'grey', duration: 2 });
     this.render();
   }
 
