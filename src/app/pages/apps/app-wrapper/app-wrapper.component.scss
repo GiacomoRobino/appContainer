@@ -6,23 +6,44 @@
     grid-template-rows: repeat(10, 1fr);      
     grid-gap: 0.5em;           
   }
-  
+  .container div {
+    overflow: hidden; /* this needs to be set so that width respects fit-content */
+  }
   .sidebar {
+    background-color: red;
     grid-column: 1 / 1;
     grid-row: 1/ 11;
+    max-width: 7vw;
 
   }
 
   .sidebar-button{
-    width: 45vh;
-    height: 50%;
-    -ms-transform:rotate(270deg); /* IE 9 */
-    -moz-transform:rotate(270deg); /* Firefox */
-    -webkit-transform:rotate(270deg); /* Safari and Chrome */
-    -o-transform:rotate(270deg); /* Opera */
+    width: 100%;
+    height: 45vh;
   }
   
   .carousel {
     grid-column: 2 / 17;
     grid-row: 1/ 11;
+  }
+
+  .button-vertical-text{
+  display: inline-block;
+    
+  transform: rotate(-90deg);
+
+
+  /* Legacy vendor prefixes that you probably don't need... */
+
+  /* Safari */
+  -webkit-transform: rotate(-90deg);
+
+  /* Firefox */
+  -moz-transform: rotate(-90deg);
+
+  /* IE */
+  -ms-transform: rotate(-90deg);
+
+  /* Opera */
+  -o-transform: rotate(-90deg);
   }

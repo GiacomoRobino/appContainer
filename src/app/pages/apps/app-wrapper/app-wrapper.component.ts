@@ -26,11 +26,10 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    /*
     let tl = gsap.timeline();
     tl.from(this.appContainer.nativeElement, {duration: 1, x: +2000, ease: Power4.easeOut});
     tl.from(this.sidebar.nativeElement, {duration: 1, x: -100, ease: Power4.easeOut}, "-=1");
-   */ 
+    
   }
 
 }
