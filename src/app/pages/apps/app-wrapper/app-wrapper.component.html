@@ -1,9 +1,7 @@
 <div class="container">
   <div #sidebar class="sidebar">
-    <div><button class="app-button element-container-style sidebar-button">App</button></div>
-    <div><button class="app-button element-container-style sidebar-button">Project Description</button></div>
-    <div><button class="app-button element-container-style sidebar-button">Youtube</button></div>
-    <div><button class="app-button element-container-style sidebar-button">Code on GitHub</button></div>
+    <button class="app-button element-container-style sidebar-button">Project Description</button>
+    <button class="app-button element-container-style sidebar-button">Code on GitHub</button>
   </div>
   <div #appContainer class="carousel element-container-style">
     <app-organizer class="element-container-style" *ngIf="appName === 'organizer'"></app-organizer>

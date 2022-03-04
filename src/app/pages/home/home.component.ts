@@ -37,11 +37,11 @@ export class HomeComponent implements OnInit, AfterViewInit{
   }
 
   goToApp(appName: string) {
-    let fadeTIme = 400;
-    this.exitAnimation(fadeTIme);
+    let fadeTime = 400;
+    this.exitAnimation(fadeTime);
     setTimeout(() => {
     this.router.navigate(['apps'], { queryParams: { appName: appName } });
-    }, fadeTIme);
+    }, fadeTime);
   }
 
   selectRandomItem(){
