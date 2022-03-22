@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { select, pointer } from 'd3';
 import { Observable } from 'rxjs';
 
@@ -7,36 +7,34 @@ import { Observable } from 'rxjs';
   templateUrl: './image-slider.component.html',
   styleUrls: ['./image-slider.component.scss']
 })
-export class ImageSliderComponent implements OnInit {
+export class ImageSliderComponent implements OnInit, AfterViewInit {
   @ViewChild("background") bg! : any;
   public svg : any;
 
   constructor() { }
 
   ngOnInit(): void {
+    
+  }
+
+  ngAfterViewInit() {
     this.initSvg();
   }
 
   initSvg() {
-    this.svg = select('.background');
+    this.svg = select('.app-background');
     this.svg.attr('shaper-rendering', 'crispEdges');
 
     Observable.fromEvent(document.body, 'mousemove').subscribe((e : any )=> {
-    let barHeight = 20;
-
-    let coordinates = this.getMousePos(document.getElementById("background"), e);
+    let barHeight = 5;
+    let coordinates = this.getMousePos(document.getElementById("app-background"), e);
+    this.svg.attr('shaper-rendering', 'crispEdges');
     let x0 = coordinates.x;
     let y0 = coordinates.y;
-    console.log(x0, y0);
     
     this.svg.selectAll('rect').remove();
-    this.svg.append('rect')
-    .attr('x', 0)
-    .attr('y', y0 - barHeight/2)
-    .attr('width', x0)
-    .attr('height', barHeight)
-    .attr('fill', 'black');
-   
+    
+    //adding vertical bar
     this.svg.append('rect')
     .attr('x', x0 - barHeight/2)
     .attr('y', 0)
