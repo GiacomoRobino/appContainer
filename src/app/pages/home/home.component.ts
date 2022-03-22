@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChild('appPreviewContainer') appPreviewContainer: any;
   appButtonElementsArray : any;
   appPreviewElement: any;
-  appNamesList = ["organizer", "matrix", "particleNetwork", "hourglass"];
+  appNamesList = ["organizer", "matrix", "particleNetwork", "imageSlider"];
   sideEscapePoint = 1700;
 
 
@@ -79,7 +79,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
   enterPreviewAnimation(row: number) {let tl = gsap.timeline();
     let rows = this.getRow(row);
     let element = this.appPreviewContainer.nativeElement;
-    console.log(rows);
     element.style.gridRowStart = rows.start;
     element.style.gridRowEnd = rows.end;
     tl.to(this.appPreviewContainer.nativeElement, {duration: 0.1, width:"100%", ease: Power4.easeIn});

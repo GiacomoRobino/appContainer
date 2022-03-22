@@ -21,6 +21,7 @@ import { BackgroundComponent } from './background/background.component';
 import { ParticleCanvasComponent } from './utils/particle-canvas/particle-canvas.component';
 import { FooterContainerComponent } from './pages/footer/footer-container/footer-container.component';
 import { SkillContainerComponent } from './pages/footer/footer-container/skill-container/skill-container.component';
+import { ImageSliderComponent } from './pages/apps/image-slider/image-slider.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SkillContainerComponent } from './pages/footer/footer-container/skill-c
     BackgroundComponent,
     ParticleCanvasComponent,
     FooterContainerComponent,
-    SkillContainerComponent
+    SkillContainerComponent,
+    ImageSliderComponent
   ],
   imports: [
     BrowserModule,

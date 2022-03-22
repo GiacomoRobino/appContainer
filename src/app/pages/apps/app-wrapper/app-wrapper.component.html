@@ -4,14 +4,9 @@
     <button class="app-button element-container-style sidebar-button"><span class="button-vertical-text">about</span></button>
   </div>
   <div #appContainer class="carousel app-container">
-    <app-organizer *ngIf="appName === 'organizer'"></app-organizer>
-    <app-matrix class="element-container-style" *ngIf="appName === 'matrix'"></app-matrix>
-    <app-particle-network class="element-container-style" *ngIf="appName === 'particleNetwork'"></app-particle-network>
-    <app-markup-editor *ngIf="appName === 'markupEditor'"></app-markup-editor>
-    <app-hourglass class="app-filler element-container-style" *ngIf="appName === 'hourglass'"></app-hourglass>
-<!--
-    <app-circular-calendar class="app-filler element-container-style" *ngIf="appName === 'circularCalendar'"></app-circular-calendar>
-    <app-json-to-graph class="app-filler element-container-style" *ngIf="appName === 'jsonToGraph'"></app-json-to-graph>
--->
+    <app-matrix *ngIf="appName === 'matrix'" class="element-container-style"></app-matrix>
+    <app-particle-network *ngIf="appName === 'particleNetwork'" class="element-container-style"></app-particle-network>
+    <app-markup-editor *ngIf="appName === 'markupEditor'" class="element-container-style"></app-markup-editor>
+    <app-image-slider *ngIf="appName === 'imageSlider'" class="element-container-style"></app-image-slider>
     </div>
 </div>
