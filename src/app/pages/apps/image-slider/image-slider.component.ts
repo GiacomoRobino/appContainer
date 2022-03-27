@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { select, selectAll, Selection } from 'd3';
 import { Observable } from 'rxjs';
+import { CssConversion } from './CssConversion';
 
 @Component({
   selector: 'app-image-slider',
@@ -10,6 +11,7 @@ import { Observable } from 'rxjs';
 export class ImageSliderComponent implements OnInit, AfterViewInit {
   @ViewChild("background") bg! : any;
   public svg : any;
+  public converter = new CssConversion();
 
   constructor() { }
 
@@ -42,10 +44,19 @@ export class ImageSliderComponent implements OnInit, AfterViewInit {
       .attr('x', x0 - barHeight/2)
       .attr('y', 0)
       .attr('width',  barHeight)
-      .attr('height', 2000)
+      .attr('height', this.getImageHeight())
       .attr('fill', 'black');
+      
+      //adding horizontal bar
+      this.svg.append('rect')
+      .attr('x', 0)
+      .attr('y', y0 - barHeight/2)
+      .attr('width', this.getImageWidth())
+      .attr('height', barHeight)
+      .attr('fill', 'black');
+
       //setting the background images
-      this.setImage(x0);
+      this.setDivision(x0, y0);
       });
   }
 
@@ -61,33 +72,24 @@ export class ImageSliderComponent implements OnInit, AfterViewInit {
 }
 
 
-  setImage(x :number) {
-    this.setLeftImage("max-width",  x.toString() + "px");
-    /*
-    leftImage.style.maxWidth = x.toString() + "px";
-    let x = leftImage._groups[0];
-    let image = x[0];
-    image.style.height = heightNum.toString() + "px";
-
-    
-    let winter : any = select('.winter');
-    let y = winter._groups[0];
-    let imageWinter = x[0];
-    
-    imageWinter.style.width = "50vw";
-    imageWinter.style.maxWidth = widthNum.toString() + "px";
-
-    let fall : any = select('.fall');
-    let z = fall._groups[0];
-    let imageFall = z[0];
-    imageFall.style.width = widthNum.toString() + "px";
-    imageFall.style.height = (this.imageHeight - heightNum).toString() + "px";
-    */
-
+  setDivision(x: number, y: number) {
+    let xInPx = this.converter.intToPx(x);
+    let yInPx = this.converter.intToPx(y);
+    this.setImage("left", "max-width", xInPx);
+    this.setImage("left", "max-height",  yInPx);
+    this.setImage("right", "max-height",  yInPx);
+    this.setImage("bottom", "max-width", xInPx);
   }
 
-  setLeftImage(style : string, value : string) {
-    selectAll('.left-image').style(style,  value);
+  setImage(selector: string, style : string, value : string) {
+    selectAll("." + selector + "-image").style(style,  value);
   }
 
+  getImageWidth(): string {
+    return  (document.getElementsByClassName('top-image')[0] as HTMLElement).offsetWidth.toString();
+  }
+
+  getImageHeight(): string {
+    return  (document.getElementsByClassName('top-image')[0] as HTMLElement).offsetHeight.toString();
+  }
 }

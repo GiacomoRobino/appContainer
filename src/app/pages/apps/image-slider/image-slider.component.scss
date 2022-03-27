@@ -1,5 +1,7 @@
 $left-image-z-index: -1;
-$right-image-z-index: -2;
+$right-image-z-index: $left-image-z-index - 1;
+$bottom-image-z-index: $right-image-z-index - 1;
+$top-image-z-index: $bottom-image-z-index - 1;
 
 img{
     width: 100%;
@@ -26,4 +28,12 @@ img{
 
 .right-image{
     z-index: $right-image-z-index;
+}
+
+.bottom-image{
+    z-index: $bottom-image-z-index;
+}
+
+.top-image{
+    z-index: $top-image-z-index;
 }
