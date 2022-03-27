@@ -1,6 +1,15 @@
-.fit-image{
+$left-image-z-index: -1;
+$right-image-z-index: -2;
+
+img{
+    width: 100%;
     height: 100%;
-    width: auto;
+    overflow: hidden;
+    object-fit: none;
+    object-position: 0% 0%;
+    position:fixed; 
+    top:0;
+    left:0;
 }
 
 .app-background{
@@ -10,3 +19,11 @@
     width: 100%;
     height:100%;
   }
+
+.left-image{
+    z-index: $left-image-z-index;
+}
+
+.right-image{
+    z-index: $right-image-z-index;
+}
