@@ -2,9 +2,11 @@ $left-image-z-index: -1;
 $right-image-z-index: $left-image-z-index - 1;
 $bottom-image-z-index: $right-image-z-index - 1;
 $top-image-z-index: $bottom-image-z-index - 1;
+$image-width: 50%;
+
 
 img{
-    width: 100%;
+    width: $image-width;
     height: 100%;
     overflow: hidden;
     object-fit: none;
@@ -14,12 +16,15 @@ img{
     left:0;
 }
 
-.app-background{
+svg{
     position:fixed; 
     top:0;
-    left:0; 
-    width: 100%;
+    left:0;
     height:100%;
+    width: $image-width;
+}
+
+.app-background{
   }
 
 .left-image{

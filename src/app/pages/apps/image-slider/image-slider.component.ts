@@ -12,6 +12,7 @@ export class ImageSliderComponent implements OnInit, AfterViewInit {
   @ViewChild("background") bg! : any;
   public svg : any;
   public converter = new CssConversion();
+  public barHeight = 5;
 
   constructor() { }
 
@@ -21,6 +22,10 @@ export class ImageSliderComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.initSvg();
+    this.setBlackBars(
+      this.getImageWidthAsInt() / 2,
+      this.getImageHeightAsInt() /2
+    );
   }
 
   initSvg() {
@@ -31,34 +36,36 @@ export class ImageSliderComponent implements OnInit, AfterViewInit {
 
   addMouseEvents() {
     Observable.fromEvent(document.body, 'mousemove').subscribe((e : any )=> {
-      let barHeight = 5;
       let coordinates = this.getMousePos(document.getElementById("app-background"), e);
       this.svg.attr('shaper-rendering', 'crispEdges');
       let x0 = coordinates.x;
       let y0 = coordinates.y;
-      
-      this.svg.selectAll('rect').remove();
+      this.setBlackBars(x0, y0);
+      });
+  }
+
+  setBlackBars(x0: number, y0: number) {
+    this.svg.selectAll('rect').remove();
       
       //adding vertical bar
       this.svg.append('rect')
-      .attr('x', x0 - barHeight/2)
+      .attr('x', x0 - this.barHeight/2)
       .attr('y', 0)
-      .attr('width',  barHeight)
+      .attr('width',  this.barHeight)
       .attr('height', this.getImageHeight())
       .attr('fill', 'black');
       
       //adding horizontal bar
       this.svg.append('rect')
       .attr('x', 0)
-      .attr('y', y0 - barHeight/2)
+      .attr('y', y0 - this.barHeight/2)
       .attr('width', this.getImageWidth())
-      .attr('height', barHeight)
+      .attr('height',this.barHeight)
       .attr('fill', 'black');
 
       //setting the background images
       this.setDivision(x0, y0);
-      });
-  }
+      }
 
   getMousePos(element: any, event: any) {
     
@@ -91,5 +98,13 @@ export class ImageSliderComponent implements OnInit, AfterViewInit {
 
   getImageHeight(): string {
     return  (document.getElementsByClassName('top-image')[0] as HTMLElement).offsetHeight.toString();
+  }
+
+  getImageWidthAsInt(): number {
+    return  (document.getElementsByClassName('top-image')[0] as HTMLElement).offsetWidth;
+  }
+
+  getImageHeightAsInt(): number {
+    return  (document.getElementsByClassName('top-image')[0] as HTMLElement).offsetHeight;
   }
 }
